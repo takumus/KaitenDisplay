@@ -44,8 +44,11 @@ package com.takumus.kaitenDisplay
 					var radius:Number = ledId * ledInterval + beginRadius;
 					var x:Number = Math.cos(rad)* radius + cx;
 					var y:Number = Math.sin(rad)* radius + cy;
+					Canvas.sprite.graphics.beginFill(0xff0000);
+					Canvas.sprite.graphics.drawCircle(x, y, 1);
 				}
 			}
+			Canvas.sprite.cacheAsBitmap = true;
 		}
 	}
 }
