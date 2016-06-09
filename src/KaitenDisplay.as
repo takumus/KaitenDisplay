@@ -9,6 +9,8 @@ package
 	{
 		public function KaitenDisplay()
 		{
+			Canvas.init(this.stage);
+			
 			var g:Generator = new Generator();
 			g.init(21,20, 10);
 			g.generate(new BitmapData(60,60,false,0xffffff),360);
