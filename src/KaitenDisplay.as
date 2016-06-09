@@ -18,7 +18,7 @@ package
 			
 			var g:Generator = new Generator();
 			g.init(60,40,10);
-			g.generate(new BitmapData(500,500,false,0xffffff),360);
+			g.generate(new BitmapData(500,500,false,0x000000),360);
 		}
 	}
 }
