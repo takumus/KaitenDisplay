@@ -19,20 +19,33 @@ package com.takumus.kaitenDisplay
 		public function generate(bmd:BitmapData, dataLength:int = 360):void
 		{
 			//正方形を想定してるのでwidth優先でいく
-			var bs:int = bmd.width;
-			var br:Rectangle = bmd.rect;
+			var size:int = bmd.width;
+			var rect:Rectangle = bmd.rect;
 			//中心
-			var bcx:Number = bs / 2;
-			var bcy:Number = bs / 2;
+			var cx:Number = size / 2;
+			var cy:Number = size / 2;
 			//角度の刻み
 			var radRate:Number = (Math.PI*2)/dataLength;
 			var radMax:Number = Math.PI*2;
 			//終了半径(ただの半径)
-			var endRadius:Number = bs / 2;
+			var endRadius:Number = size / 2;
 			//開始半径
 			var beginRadius:Number = endRadius * _centerRadiusRatio;
 			//中心を抜いた半径
 			var diffRadius:Number = endRadius - beginRadius;
+			//LEDの間隔
+			var ledInterval:Number = diffRadius / (_ledLength>1?(_ledLength-1):(0));
+			trace("LED開始:"+beginRadius);
+			trace("LED間隔:"+ledInterval);
+			trace("LED個数:"+_ledLength);
+			trace("LED長さ:"+(_ledLength-1) * ledInterval);
+			for(var rad:Number = 0; rad < radMax; rad += radRate){
+				for(var ledId:int = 0; ledId < _ledLength; ledId ++){
+					var radius:Number = ledId * ledInterval + beginRadius;
+					var x:Number = Math.cos(rad)* radius + cx;
+					var y:Number = Math.sin(rad)* radius + cy;
+				}
+			}
 		}
 	}
 }
