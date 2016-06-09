@@ -9,7 +9,7 @@ package
 		public function KaitenDisplay()
 		{
 			var g:Generator = new Generator();
-			g.init(9,1);
+			g.init(9,9,1);
 		}
 	}
 }
