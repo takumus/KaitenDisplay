@@ -61,6 +61,7 @@ package com.takumus.kaitenDisplay
 		}
 		private function convertToBytes(datas:Array):String
 		{
+			/*
 			var bytes:String = "";
 			for(var i:int = 0; i < datas.length; i ++){
 				var data:Array = datas[i];
@@ -78,6 +79,8 @@ package com.takumus.kaitenDisplay
 				bytes += byte.substr(1, byte.length) + ",\n";
 			}
 			return bytes;
+			*/
+			return datas.toString();
 		}
 	}
 }
