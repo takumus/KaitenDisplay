@@ -16,7 +16,7 @@ package com.takumus.kaitenDisplay
 			_centerRadiusRatio = centerRadiusCM / lengthCM;
 			_ledLength = ledLength;
 		}
-		public function generate(bmd:BitmapData, dataLength:int = 360):Array
+		public function generate(bmd:BitmapData, dataLength:int = 360):String
 		{
 			//正方形を想定してるのでwidth優先でいく
 			var size:int = bmd.width;
@@ -57,7 +57,21 @@ package com.takumus.kaitenDisplay
 				}
 			}
 			Canvas.sprite.cacheAsBitmap = true;
-			return data;
+			return convertToBytes(data);
+		}
+		private function convertToBytes(datas:Array):String
+		{
+			var bytes:String = "";
+			for(var i:int = 0; i < datas.length; i ++){
+				var data:Array = datas[i];
+				var byte:String = "";
+				for(var l:int = 0; l < _ledLength; l ++){
+					if(l % 8 == 0) byte += ",B";
+					byte += data[l];
+				}
+				bytes += byte.substr(1, byte.length) + ",\n";
+			}
+			return bytes;
 		}
 	}
 }
