@@ -41,8 +41,7 @@ unsigned long a[]= {
 void sWrite( int dataPin, int clockPin, int bit, unsigned long val )
 {
 	digitalWrite(LATCHPIN, 0);
-	int i;
-	for(i = 0; i < bit; i++ )
+	for(int i = 0; i < bit; i++ )
 	{
 		digitalWrite(dataPin, ((val>>i) & 1L));
 		digitalWrite(clockPin, 1);
@@ -60,11 +59,11 @@ int main(void)
 	pinMode(DATAPIN, OUTPUT);
 	pinMode(LATCHPIN, OUTPUT);
 	pinMode(CLOCKPIN, OUTPUT);
-	int i;
+	int length = sizeof(a)/sizeof(unsigned long);
 	while(1){
-		for(i = 0; i< 31; i ++){
+		for(int i = 0; i < length; i ++){
 			sWrite( DATAPIN, CLOCKPIN, 16, a[i]);
-			delayMicroseconds(10000);
+			delayMicroseconds(20000);
 		}
 	}
 	return 0;
