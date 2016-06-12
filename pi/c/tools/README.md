@@ -3,6 +3,9 @@
 ./pipush hoge.c  
 watcher/tempにプッシュする。  
 watcherが動いていたらプッシュ完了時runが走る。  
+### local/pipushc
+./pipushc hoge.c  
+pipush後に、コンソールを開いてくれるバージョン
 ### local/piquit
 ./piquit  
 watcherで開始したプロセスを終了。  
