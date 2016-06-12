@@ -1,0 +1,4 @@
+#!/bin/sh
+sh pipush $1
+echo "opening console..."
+ssh -t -i ~/.ssh/id_rsa pi@raspberrypi.local "screen -x watcher_child"
