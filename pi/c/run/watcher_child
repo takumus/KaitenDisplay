@@ -1,0 +1,5 @@
+#!/bin/sh
+while inotifywait -e modify ./temp/temp.c; do
+   screen -X -S watcher_child quit
+   screen -AmdS watcher_child run ./temp/temp.c
+done

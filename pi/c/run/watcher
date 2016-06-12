@@ -1,0 +1,2 @@
+#!/bin/sh
+screen -AmdS watcher sh watcher_child
