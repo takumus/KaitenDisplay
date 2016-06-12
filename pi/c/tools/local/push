@@ -1,1 +1,2 @@
-scp -i ~/.ssh/id_rsa test.c pi@raspberrypi.local:watcher/temp/temp.c
+NAME=$1
+scp -i ~/.ssh/id_rsa $NAME pi@raspberrypi.local:watcher/temp/temp.c
