@@ -231,17 +231,18 @@ void sWrite( int dataPin, int clockPin, int bit, unsigned long val )
 int main(void)
 {
 	if(wiringPiSetup() == -1){
-		printf("error wiringPi setup!?\n");
+		printf("error wiringPi setup\n");
 		return 1;
 	}
 	pinMode(DATAPIN, OUTPUT);
 	pinMode(LATCHPIN, OUTPUT);
 	pinMode(CLOCKPIN, OUTPUT);
+	printf("hello!");
 	int length = sizeof(a)/sizeof(unsigned long);
 	while(1){
 		for(int i = 0; i < length; i ++){
 			sWrite( DATAPIN, CLOCKPIN, 16, a[i]);
-			delayMicroseconds(20000);
+			delayMicroseconds(40000);
 		}
 	}
 	return 0;
