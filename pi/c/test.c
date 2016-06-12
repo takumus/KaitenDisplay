@@ -237,7 +237,7 @@ int main(void)
 	pinMode(DATAPIN, OUTPUT);
 	pinMode(LATCHPIN, OUTPUT);
 	pinMode(CLOCKPIN, OUTPUT);
-	printf("hello!");
+	printf("hello\n");
 	int length = sizeof(a)/sizeof(unsigned long);
 	while(1){
 		for(int i = 0; i < length; i ++){
