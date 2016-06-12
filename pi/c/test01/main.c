@@ -7,13 +7,14 @@
 #include <iostream>
 using namespace std;
 
-#define DATAPIN		0
-#define LATCHPIN	2
-#define CLOCKPIN	3
+#define DATAPIN  0
+#define LATCHPIN 2
+#define CLOCKPIN 3
 
 vector<string> data{
 	"1000000000000000",
-	"1100000000000000"
+	"1100000000000000",
+	"1110000000000000"
 };
 int interval = 100000;
 int length;
