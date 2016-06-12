@@ -1,7 +1,10 @@
 #!/bin/sh
 echo compiling...
 NAME=`echo $1 | sed "s/\.[^\.]*$//"`
-sudo gcc $1 -o $NAME -lwiringPi -std=c99
+sudo g++ $1 -o $NAME -lwiringPi -pthread -std=c++11
+echo complete!
+echo ENTER to run
+read WAIT
 echo running...
 cd `dirname $NAME`
 sudo ./`basename $NAME`
