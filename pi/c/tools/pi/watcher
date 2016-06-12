@@ -1,3 +1,6 @@
 #!/bin/sh
 cd `dirname $0`
-screen -AmdS watcher sh watcher_child_born
+. ./config.conf
+echo watcher is running
+echo TARGET_PATH = $TARGET_PATH
+screen -AmdS watcher ./watcher_child_born $TARGET_PATH
