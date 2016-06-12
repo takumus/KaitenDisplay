@@ -1,6 +1,6 @@
 #!/bin/sh
 echo compiling...
-NAME=$(echo $1 | sed 's/\.[^\.]*$//')
+NAME=`echo $1 | sed "s/\.[^\.]*$//"`
 sudo gcc $1 -o $NAME -lwiringPi -std=c99
 echo running...
 sudo ./$NAME
