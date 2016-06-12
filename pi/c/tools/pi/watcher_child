@@ -1,5 +1,6 @@
 #!/bin/sh
-while inotifywait -e modify ./temp/temp.c; do
+TARGET_PATH="./temp/temp.c"
+while inotifywait -e modify $TARGET_PATH; do
    screen -X -S watcher_child quit
-   screen -AmdS watcher_child run ./temp/temp.c
+   screen -AmdS watcher_child run $TARGET_PATH
 done
