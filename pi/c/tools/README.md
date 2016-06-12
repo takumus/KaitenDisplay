@@ -1,8 +1,11 @@
 # ローカルに入れる物
-### local/push
-./push hoge.c
+### local/pipush
+./pipush hoge.c  
 watcher/tempにプッシュする。  
 watcherが動いていたらプッシュ完了時runが走る。  
+### local/piquit
+./piquit  
+watcherで開始したプロセスを終了。  
 # raspberryPIに入れる物
 ### pi/run
 ./run hoge.c  
