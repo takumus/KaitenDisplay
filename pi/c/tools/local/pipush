@@ -1,5 +1,5 @@
 #!/bin/sh
-TARGET_PATH="watcher/temp/temp.c"
+TARGET_PATH="/home/pi/watcher/temp/temp.c"
 NAME=$1
 echo "uploading..."
 scp -i ~/.ssh/id_rsa $NAME pi@raspberrypi.local:$TARGET_PATH

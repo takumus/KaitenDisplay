@@ -2,5 +2,5 @@
 cd `dirname $0`
 . ./config.conf
 echo watcher is running
-echo TARGET_PATH = $TARGET_PATH
+echo -TARGET_PATH=$TARGET_PATH
 screen -AmdS watcher ./watcher_child_born $TARGET_PATH
