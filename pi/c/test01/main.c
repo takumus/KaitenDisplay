@@ -72,6 +72,7 @@ int main(void)
 	printf("hello\n");
 	length = data.size();
 	while(1){
+		if(length == 0)sWrite( DATAPIN, CLOCKPIN, 16, "0000000000000000");
 		for(int i = 0; i < length; i ++){
 			sWrite( DATAPIN, CLOCKPIN, 16, data[i]);
 			delayMicroseconds(interval);
