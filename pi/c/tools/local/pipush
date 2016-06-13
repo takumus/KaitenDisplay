@@ -1,5 +1,6 @@
 #!/bin/sh
-TARGET_PATH="/home/pi/watcher/temp/temp.c"
+TARGET_PATH="/home/pi/runner/temp/temp.c"
+RUNNER_PATH="/home/pi/runner/run";
 NAME=$1
 echo "uploading..."
-scp -i ~/.ssh/id_rsa $NAME pi@raspberrypi.local:$TARGET_PATH
+data=`cat $NAME | base64`; ssh -tt -i ~/.ssh/id_rsa pi@raspberrypi.local "echo '$data' | base64 -d > $TARGET_PATH; $RUNNER_PATH $TARGET_PATH;";

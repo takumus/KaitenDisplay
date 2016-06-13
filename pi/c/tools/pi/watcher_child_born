@@ -1,7 +1,0 @@
-#!/bin/sh
-TARGET_PATH=$1
-while inotifywait -e modify $TARGET_PATH; do
-   ./watcher_child_kill
-   screen -AmdS watcher_child
-   screen -S watcher_child -p 0 -X stuff "./run $TARGET_PATH;\\r"
-done

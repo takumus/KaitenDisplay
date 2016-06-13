@@ -1,2 +1,2 @@
 #!/bin/sh
-ssh -i ~/.ssh/id_rsa pi@raspberrypi.local "./watcher/watcher_child_kill"
+ssh -i ~/.ssh/id_rsa pi@raspberrypi.local "/home/pi/runner/kill_child"

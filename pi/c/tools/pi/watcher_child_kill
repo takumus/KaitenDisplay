@@ -1,2 +1,0 @@
-#!/bin/sh
-screen -X -S watcher_child quit
