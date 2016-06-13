@@ -10,8 +10,8 @@ hoge.cをpiに送ってコンパイル＆実行する。
 どんどん`./pipush`しちゃってください。
 # raspberryPIに入れる物
 ### pi/run
-./run hoge.c  
-./run ./hoge/hoge.c  
+    ./run hoge.c  
+    ./run ./hoge/hoge.c  
 これでコンパイルと実行をしてくれる。
 ### pi/runner
 これはローカルの`./pipush`用のコマンドです。
