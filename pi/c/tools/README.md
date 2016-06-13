@@ -25,5 +25,4 @@ runnerを殺すコマンドです。
 ラズパイ側でscreenを使いますので入れておきましょう。  
 `./pi`をラズパイの何処かにおいてください。  
 `./local`は、ローカルの何処かにおいてください。  
-`./local`の中の`pipush`,`piquit`は中にラズパイに置いてもらった`pi`の場所を示す部分があるので、  
-そこを編集してください。
+`./local`の中の`pipush`,`piquit`は`TARGET_PATH`,`RUNNER_PATH`,`QUIT_RUNNER_PATH`を編集して下さい。  
