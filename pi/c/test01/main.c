@@ -11,12 +11,8 @@ using namespace std;
 #define LATCHPIN 2
 #define CLOCKPIN 3
 
-vector<string> data{
-	"1000000000000000",
-	"1100000000000000",
-	"1110000000000000"
-};
-int interval = 100000;
+vector<string> data{};
+int interval = 10000;
 int length;
 void sWrite( int dataPin, int clockPin, int bit, string val )
 {
@@ -29,6 +25,13 @@ void sWrite( int dataPin, int clockPin, int bit, string val )
 	}
 	digitalWrite(LATCHPIN, 1);
 }
+void addLine(string line, int count)
+{
+	for(;count > 0; count --){
+		data.push_back(line);
+	}
+}
+
 void* thread( void* args )
 {	
 	while( 1 ){
@@ -50,15 +53,84 @@ void* thread( void* args )
 				len ++;
 			}
 
-			data.push_back(str);
+			addLine(str, 1);
 		}
 		length = data.size();
 	}
 	return NULL;
 }
+void initDefaultData()
+{
+	string str;
+	string tmpStr;
+	//だんだん積み重なる君
+	for(int i = 0; i < 16; i ++){
+		str = "0000000000000000";
+		int ii;
+		for(ii = 0; ii < i; ii++){
+			str[ii] = '1';
+		}
+		tmpStr = str;
+		addLine(str, 3);
+		for(ii = 15; ii >= i; ii--){
+			str = tmpStr;
+			str[ii] = '1';
+			addLine(str, 3);
+		}
+	}
+	//両端から消えてゆく
+	str = "1111111111111111";
+	for(int i = 0; i < 8; i ++){
+		str[i] = '0';
+		str[15 - i] = '0';
+		addLine(str, 3);
+	}
+	//両端から来る
+	str = "0000000000000000";
+	for(int i = 0; i < 8; i ++){
+		str[i] = '1';
+		str[15 - i] = '1';
+		addLine(str, 3);
+	}
+	//だんだん積み重なる君1こ飛ばし
+	for(int i = 0; i < 16; i +=4){
+		str = "0000000000000000";
+		int ii;
+		for(ii = 0; ii < i; ii+=4){
+			str[ii] = '1';
+		}
+		tmpStr = str;
+		addLine(str, 3);
+		for(ii = 15; ii >= i; ii--){
+			str = tmpStr;
+			str[ii] = '1';
+			addLine(str, 3);
+		}
+	}
+	//１こ飛ばし点滅
+	for(int i = 0; i < 64; i ++){
+		for(int ii = 0; ii < 16; ii++){
+			str[ii] = ((i+ii)%4==0)?'1':'0';
+		}
+		addLine(str, 3);
+	}
+	//点滅
+	for(int i = 0; i < 16; i ++){
+		for(int ii = 0; ii < 16; ii++){
+			str[ii] = (i%2==0)?'1':'0';
+		}
+		addLine(str, 8);
+	}
 
+	//デフォデータ出力
+	for(int i = 0; i < data.size(); i ++){
+		printf("%s\n", data[i].c_str());
+	}
+}
 int main(void)
 {
+	initDefaultData();
+
 	pthread_t th;
 	pthread_create( &th, NULL, thread, (void *)NULL );
 
@@ -69,7 +141,6 @@ int main(void)
 	pinMode(DATAPIN, OUTPUT);
 	pinMode(LATCHPIN, OUTPUT);
 	pinMode(CLOCKPIN, OUTPUT);
-	printf("hello\n");
 	length = data.size();
 	while(1){
 		if(length == 0)sWrite( DATAPIN, CLOCKPIN, 16, "0000000000000000");
