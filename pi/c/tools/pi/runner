@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 echo compiling...
 NAME=`echo $1 | sed "s/\.[^\.]*$//"`
 sudo g++ $1 -o $NAME -lwiringPi -pthread -std=c++11

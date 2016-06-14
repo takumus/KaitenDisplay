@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 TARGET_PATH="/home/pi/runner/temp/temp.c"
 RUNNER_PATH="/home/pi/runner/run";
 NAME=$1
