@@ -1,10 +1,13 @@
 window.addEventListener('load',function() {
+	document.body.innerText = "connecting";
+
 	var host = "ws://raspberrypi.local:3000/";
 	var socket = new WebSocket(host);
-
-	document.body.innerText = "connecting";
+	var defData = '0000000000000000';
 	socket.addEventListener('open', function() {
-		document.body.innerText = "connected";
+		var strs = ['\\','-','/','|'];
+		var n = 0;
+		setInterval(function(){document.body.innerText = " connected " + strs[n++%3]}, 100);
 	});
 	socket.addEventListener('message', function(message) {
 
@@ -16,23 +19,22 @@ window.addEventListener('load',function() {
 		socket.onclose();
 	});
 
-	document.addEventListener('mousemove', function(e) {
-		var y = e.clientY/window.innerHeight;
-		send(y);
-	});
-	
-	document.addEventListener('touchmove', function(e) {
-		var y = e.touches[0].clientY/window.innerHeight;
-		send(y);
+	var touch = function(e) {
 		e.preventDefault();
-	});
-
-	var send = function(y) {
-		var id = Math.floor(y * 16);
-		var str = "";
-		for(var i = 0; i < 16; i ++){
-			str += i==id?'1':'0';
+		var data = defData.split("");
+		for(var i in e.touches){
+			data[Math.floor(e.touches[i].clientY/window.innerHeight*16)] = '1';
 		}
-		socket.send(str+'\n');
+		send(data.join(""));
 	}
+	var end = function(e){
+		send(defData);
+	}
+	var send = function(data) {
+		socket.send(data+'\n');
+	}
+	document.addEventListener('touchstart', touch);
+	document.addEventListener('touchmove', touch);
+	document.addEventListener('touchend', touch);
+	document.addEventListener('touchcancel', end);
 });
