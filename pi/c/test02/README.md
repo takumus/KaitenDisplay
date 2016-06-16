@@ -1,5 +1,5 @@
-# as3 -> nodejs -> c -> gpio
+# ブラウザからwebsocket.ioでnodejsに送りcからgpio制御
 
-nodeでtcpサーバーを立てて、as3でつなぐ。  
+nodeでwebsocket立てて、ブラウザのからつなぐ。  
 nodeはcで書いたgpio制御用アプリをchild_processで起動。  
-as3からtcpでnodeに入ってきた文字をchild_processのstdinへ送る。
+ブラウザからnodeに入ってきた文字をchild_processのstdinへ送る。
