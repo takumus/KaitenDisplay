@@ -20,9 +20,11 @@ window.addEventListener('load',function() {
 		var y = e.clientY/window.innerHeight;
 		send(y);
 	});
+	
 	document.addEventListener('touchmove', function(e) {
 		var y = e.touches[0].clientY/window.innerHeight;
 		send(y);
+		e.preventDefault();
 	});
 
 	var send = function(y) {
