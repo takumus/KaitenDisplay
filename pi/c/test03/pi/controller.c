@@ -17,10 +17,11 @@ void* thread( void* args )
 		string str;
 		cin >> str;
 		if(str[0] == 'i'){
+			int len = 0;
 			for(int i = 0; i < data.size(); i ++){
-				printf("%d\n", data[i].length());
+				len += data[i].length();
 			}
-			printf("%d\n", data.size());
+			printf("%d\n", len);
 			continue;
 		}
 		int len = str.length();
@@ -34,6 +35,7 @@ void* thread( void* args )
 }
 int main(void)
 {
+	printf("hello\n");
 	pthread_t th;
 	pthread_create( &th, NULL, thread, (void *)NULL );
 

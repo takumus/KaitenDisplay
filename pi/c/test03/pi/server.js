@@ -3,7 +3,7 @@ const app = spawn('./controller');
 const net = require('net');
 
 app.stdout.on('data', (data) => {
-	console.log(data);
+	console.log(data.toString());
 });
 app.stderr.on('data', (data) => {
 
@@ -23,7 +23,7 @@ server.on('connection', (socket) => {
 	sockets[key] = socket;
 	console.log('connected ' + key);
 	socket.on('message', (data) => {
-		datas[key] = data.split("");
+		app.stdin.write(new Buffer(data));
 	});
 	socket.on('close', () => {
 		console.log('closed');
