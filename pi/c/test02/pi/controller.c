@@ -29,11 +29,11 @@ void* thread( void* args )
 		string str;
 		cin >> str;
 		int len = str.length();
-		while(len < 16){
+		while(len < 24){
 			str+='0';
 			len ++;
 		}
-		sWrite( DATAPIN, CLOCKPIN, 16, str);
+		sWrite( DATAPIN, CLOCKPIN, 24, str);
 	}
 	return NULL;
 }

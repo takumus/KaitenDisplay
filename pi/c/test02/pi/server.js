@@ -20,7 +20,7 @@ const server = ws.listen(3000, ()=> {
 const sockets = {};
 const datas = {};
 const write = () => {
-	var cdata = "0000000000000000".split("");
+	var cdata = "000000000000000000000000".split("");
 	for(const key in datas){
 		const data = datas[key];
 		data.forEach((d, i) => {

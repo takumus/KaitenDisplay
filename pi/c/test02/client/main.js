@@ -3,7 +3,7 @@ window.addEventListener('load',function() {
 
 	var host = "ws://raspberrypi.local:3000/";
 	var socket = new WebSocket(host);
-	var defData = '0000000000000000';
+	var defData = '000000000000000000000000';
 	socket.addEventListener('open', function() {
 		var strs = ['\\','-','/','|'];
 		var n = 0;
@@ -23,7 +23,7 @@ window.addEventListener('load',function() {
 		e.preventDefault();
 		var data = defData.split("");
 		for(var i in e.touches){
-			data[Math.floor(e.touches[i].clientY/window.innerHeight*16)] = '1';
+			data[Math.floor(e.touches[i].clientY/window.innerHeight*24)] = '1';
 		}
 		send(data.join(""));
 	}
