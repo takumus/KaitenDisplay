@@ -1,7 +1,7 @@
 #!/bin/bash
 echo compiling...
 NAME=`echo $1 | sed "s/\.[^\.]*$//"`
-sudo g++ $1 -o $NAME -lwiringPi -pthread -std=c++11
+sudo g++ $1 -o $NAME -lwiringPi -pthread -lrt -std=c++11
 echo complete!
 echo ENTER to run
 read WAIT
