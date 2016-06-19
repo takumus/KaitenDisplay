@@ -3,9 +3,12 @@ package
 	import com.takumus.kaitenDisplay.Generator;
 	
 	import flash.display.BitmapData;
+	import flash.display.Loader;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
+	import flash.events.Event;
+	import flash.net.URLRequest;
 	
 	public class KaitenDisplay extends Sprite
 	{
@@ -15,11 +18,17 @@ package
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			
 			Canvas.init(this.stage);
-			
 			var g:Generator = new Generator();
-			g.init(60,40,10);
-			var data:String = g.generate(new BitmapData(500,500,false,0x000000),360);
-			trace(data);
+			g.init(48,48,0);
+			
+			var loader:Loader = new Loader();
+			loader.load(new URLRequest("testimage.png?"+new Date().getTime()));
+			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(e:Event):void{
+				var bmd:BitmapData = new BitmapData(loader.width, loader.height, false, 0xffffff);
+				bmd.draw(loader);
+				var data:String = g.generate(bmd,600);
+				trace(data);
+			});
 		}
 	}
 }

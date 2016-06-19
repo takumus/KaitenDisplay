@@ -61,26 +61,12 @@ package com.takumus.kaitenDisplay
 		}
 		private function convertToBytes(datas:Array):String
 		{
-			/*
-			var bytes:String = "";
+			var str:String = "";
 			for(var i:int = 0; i < datas.length; i ++){
-				var data:Array = datas[i];
-				var byte:String = "";
-				var c:int = 0;
-				for(var l:int = 0; l < _ledLength; l ++){
-					if(l % 8 == 0) {
-						c = 0;
-						byte += ",B";
-					}
-					byte += data[l];
-					c++;
-				}
-				for(; c < 8; c++)byte += 0;
-				bytes += byte.substr(1, byte.length) + ",\n";
+				var data:Array = datas[i].reverse();
+				str += data.join("")+"\n";
 			}
-			return bytes;
-			*/
-			return datas.toString();
+			return str;
 		}
 	}
 }
