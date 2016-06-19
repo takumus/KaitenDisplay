@@ -46,6 +46,7 @@ void* thread( void* args )
 			//読み込み中にする
 			printf("begin data\n");
 			status = READING;
+			data.clear();
 			continue;
 		}else if(head == '>'){
 			//読み込み終了にする
