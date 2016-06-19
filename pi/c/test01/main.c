@@ -80,11 +80,11 @@ void initDefaultData()
 			str[ii] = '1';
 		}
 		tmpStr = str;
-		addLine(str, 3);
+		addLine(str, 1);
 		for(ii = LED_LENGTH - 1; ii >= i; ii--){
 			str = tmpStr;
 			str[ii] = '1';
-			addLine(str, 3);
+			addLine(str, 1);
 		}
 	}
 	//両端から消えてゆく
@@ -101,11 +101,33 @@ void initDefaultData()
 		str[LED_LENGTH - 1 - i] = '1';
 		addLine(str, 3);
 	}
+	//両端から消えてゆく
+	str = getFillStr('1');
+	for(int i = 0; i < LED_LENGTH/2; i ++){
+		str[i] = '0';
+		str[LED_LENGTH - 1 - i] = '0';
+		addLine(str, 3);
+	}
+	//両端から来る
+	str =  getFillStr('0');
+	for(int i = 0; i < LED_LENGTH/2; i ++){
+		str[i] = '1';
+		str[LED_LENGTH - 1 - i] = '1';
+		addLine(str, 3);
+	}
+	//両端から消えてゆく
+	str = getFillStr('1');
+	for(int i = 0; i < LED_LENGTH/2; i ++){
+		str[i] = '0';
+		str[LED_LENGTH - 1 - i] = '0';
+		addLine(str, 3);
+	}
+	int n = 5;
 	//だんだん積み重なる君1こ飛ばし
-	for(int i = 0; i < LED_LENGTH; i +=4){
+	for(int i = 0; i < LED_LENGTH; i +=n){
 		str = getFillStr('0');
 		int ii;
-		for(ii = 0; ii < i; ii+=4){
+		for(ii = 0; ii < i; ii+=n){
 			str[ii] = '1';
 		}
 		tmpStr = str;
@@ -119,7 +141,7 @@ void initDefaultData()
 	//１こ飛ばし点滅
 	for(int i = 0; i < 64; i ++){
 		for(int ii = 0; ii < LED_LENGTH; ii++){
-			str[ii] = ((i+ii)%4==0)?'1':'0';
+			str[ii] = ((i+ii)%n==0)?'1':'0';
 		}
 		addLine(str, 3);
 	}
