@@ -1,9 +1,13 @@
+var LED_LENGTH = 48;
 window.addEventListener('load',function() {
 	document.body.innerText = "connecting";
 
 	var host = "ws://raspberrypi.local:3000/";
 	var socket = new WebSocket(host);
-	var defData = '000000000000000000000000';
+	var defData = "";
+	for(var i = 0; i < LED_LENGTH; i ++){
+		defData += '0';
+	}
 	socket.addEventListener('open', function() {
 		var strs = ['\\','-','/','|'];
 		var n = 0;
@@ -23,7 +27,7 @@ window.addEventListener('load',function() {
 		e.preventDefault();
 		var data = defData.split("");
 		for(var i in e.touches){
-			data[Math.floor(e.touches[i].clientY/window.innerHeight*24)] = '1';
+			data[Math.floor(e.touches[i].clientY/window.innerHeight*LED_LENGTH)] = '1';
 		}
 		send(data.join(""));
 	}

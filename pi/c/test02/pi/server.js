@@ -1,7 +1,7 @@
 const spawn = require('child_process').spawn;
 const app = spawn('./controller');
 const net = require('net');
-
+const LED_LENGTH = 48;
 app.stdout.on('data', (data) => {
 	console.log(data);
 });
@@ -19,8 +19,15 @@ const server = ws.listen(3000, ()=> {
 
 const sockets = {};
 const datas = {};
+const fill = (()=> {
+	var str = "";
+	for(var i = 0; i < LED_LENGTH; i ++){
+		str += '0';
+	}
+	return str;
+})();
 const write = () => {
-	var cdata = "000000000000000000000000".split("");
+	var cdata = fill.split("");
 	for(const key in datas){
 		const data = datas[key];
 		data.forEach((d, i) => {

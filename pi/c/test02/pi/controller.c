@@ -10,6 +10,7 @@ using namespace std;
 #define DATAPIN  0
 #define LATCHPIN 2
 #define CLOCKPIN 3
+#define LED_LENGTH 48
 
 void sWrite( int dataPin, int clockPin, int bit, string val )
 {
@@ -29,11 +30,11 @@ void* thread( void* args )
 		string str;
 		cin >> str;
 		int len = str.length();
-		while(len < 24){
+		while(len < LED_LENGTH){
 			str+='0';
 			len ++;
 		}
-		sWrite( DATAPIN, CLOCKPIN, 24, str);
+		sWrite( DATAPIN, CLOCKPIN, LED_LENGTH, str);
 	}
 	return NULL;
 }

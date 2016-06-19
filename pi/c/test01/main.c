@@ -10,7 +10,7 @@ using namespace std;
 #define DATAPIN  0
 #define LATCHPIN 2
 #define CLOCKPIN 3
-#define LED_LENGTH 24
+#define LED_LENGTH 48
 
 vector<string> data{};
 int interval = 10000;
