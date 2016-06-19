@@ -5,6 +5,10 @@
 #include <string>
 #include <string.h>
 #include <iostream>
+#include <time.h>
+#include <sys/time.h>
+#include <sys/resource.h>
+
 using namespace std;
 
 #define DATAPIN  0
@@ -17,11 +21,14 @@ using namespace std;
 #define NONE      2
 vector<string> data{};
 int status = NONE;
-int rpMicros = 1000000;//1回転1秒(1000000マイクロ秒)
+unsigned int rpMicros = 1000000;//1回転1秒(1000000マイクロ秒)
 int dataLength = 1;
-int dataMicros;
+unsigned int dataMicros;
 
-void update() {
+int animateIndex = 0;
+
+void update()
+{
 	//一回転の時間をデータ数で割って１データを表示する時間を求めるのです
 	dataMicros = rpMicros / dataLength;
 }
@@ -37,16 +44,21 @@ void* thread( void* args )
 
 		if(head == '<'){
 			//読み込み中にする
+			printf("begin data\n");
 			status = READING;
 			continue;
 		}else if(head == '>'){
 			//読み込み終了にする
+			printf("end data\n");
 			status = COMPLETE;
+			dataLength = data.size();
 			//データ数が変わったので。
 			update();
 			continue;
 		}else if(head == 's'){
+			status = NONE;
 			cin >> rpMicros;
+			status = COMPLETE;
 			//１回転あたりの時間が変わったので。
 			update();
 		}
@@ -74,6 +86,35 @@ void write(string val)
 	}
 	digitalWrite(LATCHPIN, 1);
 }
+double getrusage_sec()
+{
+    struct rusage t;
+    struct timeval tv;
+    getrusage(RUSAGE_SELF, &t);
+    tv = t.ru_utime;
+    return tv.tv_sec + tv.tv_usec * 1e-6;
+}
+void animating()
+{
+	int mcount = 0;
+	struct timespec gettime_now;
+	long pt = 0;
+	while(1){
+		if(status != COMPLETE) continue;
+		struct timeval start, stop;
+		gettimeofday(&start, NULL);
+		long nt = (long)(start.tv_sec*1000000ULL+start.tv_usec);
+		if(pt + dataMicros < nt ){
+			printf(":%d\n", animateIndex);
+			pt = nt;
+			if(animateIndex >= dataLength){
+				animateIndex = 0;
+			}
+			write(data[animateIndex]);
+			animateIndex ++;
+		}
+	}
+}
 int main(void)
 {
 	pthread_t th;
@@ -86,7 +127,7 @@ int main(void)
 	pinMode(DATAPIN, OUTPUT);
 	pinMode(LATCHPIN, OUTPUT);
 	pinMode(CLOCKPIN, OUTPUT);
-	while(1){
-	}
+
+	animating();
 	return 0;
 }
