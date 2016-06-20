@@ -30,7 +30,7 @@ package
 				bmd.draw(loader);
 				var data:String = g.generate(bmd,600);
 				trace(data);
-				Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT,data);
+				Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, "<\n"+data+">/n");
 				stage.stageWidth = bmd.width;
 				stage.stageHeight = bmd.height;
 			});

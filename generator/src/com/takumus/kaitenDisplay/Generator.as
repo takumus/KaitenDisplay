@@ -57,13 +57,13 @@ package com.takumus.kaitenDisplay
 				}
 			}
 			Canvas.sprite.cacheAsBitmap = true;
-			return convertToBytes(data);
+			return convertData(data);
 		}
-		private function convertToBytes(datas:Array):String
+		private function convertData(datas:Array):String
 		{
 			var str:String = "";
 			for(var i:int = 0; i < datas.length; i ++){
-				var data:Array = datas[i].reverse();
+				var data:Array = datas[i];
 				str += data.join("")+"\n";
 			}
 			return str;

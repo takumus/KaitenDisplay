@@ -107,7 +107,7 @@ void animating()
 		gettimeofday(&start, NULL);
 		long nt = (long)(start.tv_sec*1000000ULL+start.tv_usec);
 		if(pt + dataMicros < nt ){
-			printf(":%d\n", animateIndex);
+			//printf(":%d\n", animateIndex);
 			pt = nt;
 			if(animateIndex >= dataLength){
 				animateIndex = 0;
