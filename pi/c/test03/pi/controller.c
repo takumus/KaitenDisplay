@@ -5,12 +5,13 @@
 #include <string>
 #include <string.h>
 #include <iostream>
-using namespace std;
-vector<string> data{};
+
 #define DATAPIN  5
 #define LATCHPIN 4
 #define CLOCKPIN 1
 
+using namespace std;
+vector<string> data{};
 void* thread( void* args )
 {	
 	while( 1 ){
