@@ -11,9 +11,10 @@
 
 using namespace std;
 
-#define DATAPIN  0
-#define LATCHPIN 2
-#define CLOCKPIN 3
+#define DATAPIN  5
+#define LATCHPIN 4
+#define CLOCKPIN 1
+
 #define LED_LENGTH 48
 
 #define READING   0
