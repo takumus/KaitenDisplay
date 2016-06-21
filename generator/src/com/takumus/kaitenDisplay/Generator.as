@@ -28,7 +28,7 @@ package com.takumus.kaitenDisplay
 			var radRate:Number = (Math.PI*2)/dataLength;
 			var radMax:Number = Math.PI*2;
 			//終了半径(ただの半径)
-			var endRadius:Number = size / 2;
+			var endRadius:Number = (size / 2)-1;
 			//開始半径
 			var beginRadius:Number = endRadius * _centerRadiusRatio;
 			//中心を抜いた半径
@@ -47,13 +47,12 @@ package com.takumus.kaitenDisplay
 					var radius:Number = ledId * ledInterval + beginRadius;
 					var x:Number = Math.cos(rad)* radius + cx;
 					var y:Number = Math.sin(rad)* radius + cy;
-					if(bmd.getPixel(x, y) == 0){
-						Canvas.sprite.graphics.beginFill(0xff0000);
-						Canvas.sprite.graphics.drawCircle(x, y, 1);
-						childData.push(1);
-						continue;
-					}
-					childData.push(0);
+					var fill:Boolean = bmd.getPixel(x, y) == 0;
+					
+					Canvas.sprite.graphics.beginFill(fill?0xff0000:0xCCCCCC);
+					Canvas.sprite.graphics.drawCircle(x, y, 2);
+					childData.push(fill?1:0);
+					
 				}
 			}
 			Canvas.sprite.cacheAsBitmap = true;

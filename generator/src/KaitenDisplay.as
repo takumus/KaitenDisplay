@@ -21,7 +21,7 @@ package
 			
 			Canvas.init(this.stage);
 			var g:Generator = new Generator();
-			g.init(48,48,0);
+			g.init(48, 48, 0);
 			
 			var loader:Loader = new Loader();
 			loader.load(new URLRequest("file:///C:/Users/takumus/Desktop/testimage.png?"+new Date().getTime()));
@@ -30,7 +30,7 @@ package
 				bmd.draw(loader);
 				var data:String = g.generate(bmd,600);
 				trace(data);
-				Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, "<\n"+data+">/n");
+				Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, "<\n"+data+">\n");
 				stage.stageWidth = bmd.width;
 				stage.stageHeight = bmd.height;
 			});
