@@ -14,6 +14,7 @@ using namespace std;
 
 void sWrite( int dataPin, int clockPin, int bit, string val )
 {
+	printf("%s\n", val.c_str());
 	digitalWrite(LATCHPIN, 0);
 	for(int i = 0; i < bit; i++ )
 	{

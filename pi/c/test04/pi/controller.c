@@ -35,7 +35,6 @@ void update()
 }
 void* thread( void* args )
 {
-
 	while( 1 ){
 		string str;
 		char head;
