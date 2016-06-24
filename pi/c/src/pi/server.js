@@ -23,6 +23,7 @@ server.on('connection', (socket) => {
 	sockets[key] = socket;
 	console.log('connected ' + key);
 	socket.on('message', (data) => {
+		//console.log(data);
 		app.stdin.write(new Buffer(data));
 	});
 	socket.on('close', () => {
