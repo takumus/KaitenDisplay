@@ -44,10 +44,23 @@ void update()
 {
 	//一回転の時間をデータ数で割って１データを表示する時間を求めるのです
 	dataMicros = rpMicros / dataLength;
+	dataIndex = 0;
 }
-void* thread_command( void* args )
+void write(string val)
 {
-	while( 1 ){
+	digitalWrite(LATCHPIN, 0);
+	for(int i = 0; i < LED_LENGTH; i++ )
+	{
+		digitalWrite(DATAPIN, val[i] == '1');
+		digitalWrite(CLOCKPIN, 1);
+		digitalWrite(CLOCKPIN, 0);
+	}
+	digitalWrite(LATCHPIN, 1);
+}
+//コマンド受付用スレッド
+void* thread_command(void* args)
+{
+	while(1){
 		string str;
 		char head;
 
@@ -87,28 +100,37 @@ void* thread_command( void* args )
 	}
 	return NULL;
 }
-void* thread_rotationTimer( void* args )
+//回転速度検知用スレッド
+void* thread_rotationTimer(void* args)
 {
-	unsigned long pt, nt;
+	unsigned long pt = 0, nt = 0, diff;
+	timeval time;
+	int prevStatus = 1;
+	while(1){
+		int status = digitalRead(INPUTPIN);
+		if(status == prevStatus) continue;
+		prevStatus = status;
+		if(status == 0){
+			gettimeofday(&time, NULL);
+			nt = (time.tv_sec * 1000000ULL + time.tv_usec);
+			diff = nt - pt;
+			if(diff > 100000){
+				pt = nt;
+				printf("%d\n", diff);
+				rpMicros = diff;
+				update();
+			}
+		}
+	}
 	return NULL;
 }
-void write(string val)
+//アニメーション用スレッド
+void* thread_animate(void* args)
 {
-	digitalWrite(LATCHPIN, 0);
-	for(int i = 0; i < LED_LENGTH; i++ )
-	{
-		digitalWrite(DATAPIN, val[i] == '1');
-		digitalWrite(CLOCKPIN, 1);
-		digitalWrite(CLOCKPIN, 0);
-	}
-	digitalWrite(LATCHPIN, 1);
-}
-void animating()
-{
-	unsigned long pt, nt = 0;
+	unsigned long pt = 0, nt = 0;
+	timeval time;
 	while(1){
 		if(status != COMPLETE) continue;
-		struct time;
 		gettimeofday(&time, NULL);
 		nt = (time.tv_sec * 1000000ULL + time.tv_usec);
 		if(pt + dataMicros < nt ){
@@ -118,16 +140,11 @@ void animating()
 			dataIndex ++;
 		}
 	}
+	return NULL;
 }
+
 int main(void)
 {
-	pthread_t _thred_command;
-	pthread_create( &_thred_command, NULL, thread_command, (void *)NULL );
-
-	pthread_t _thred_rotationTimer;
-	pthread_create( &_thred_rotationTimer, NULL, thread_rotationTimer, (void *)NULL );
-
-
 	if(wiringPiSetup() == -1){
 		printf("error wiringPi setup\n");
 		return 1;
@@ -138,6 +155,17 @@ int main(void)
 	pinMode(LATCHPIN, OUTPUT);
 	pinMode(CLOCKPIN, OUTPUT);
 
-	animating();
+	pthread_t _thread_command;
+	pthread_create(&_thread_command, NULL, thread_command, (void *)NULL);
+
+	pthread_t _thread_rotationTimer;
+	pthread_create(&_thread_rotationTimer, NULL, thread_rotationTimer, (void *)NULL);
+
+	pthread_t _thread_animate;
+	pthread_create(&_thread_animate, NULL, thread_animate, (void *)NULL);
+
+	while(1){
+
+	}
 	return 0;
 }
