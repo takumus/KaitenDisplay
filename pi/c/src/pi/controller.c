@@ -17,6 +17,8 @@ using namespace std;
 #define DATAPIN  5
 //リードスイッチ
 #define INPUTPIN 6
+//デバッグLEDピン
+#define DEBUGLEDPIN 10
 
 //LED個数
 #define LED_LENGTH 48
@@ -136,6 +138,7 @@ void* thread_animate(void* args)
 		if(pt + dataMicros < nt ){
 			pt = nt;
 			if(dataIndex >= dataLength) dataIndex = 0;
+			digitalWrite(DEBUGLEDPIN, dataIndex == 0);
 			write(data[dataIndex]);
 			dataIndex ++;
 		}
@@ -154,6 +157,7 @@ int main(void)
 	pinMode(DATAPIN, OUTPUT);
 	pinMode(LATCHPIN, OUTPUT);
 	pinMode(CLOCKPIN, OUTPUT);
+	pinMode(DEBUGLEDPIN, OUTPUT);
 
 	pthread_t _thread_command;
 	pthread_create(&_thread_command, NULL, thread_command, (void *)NULL);
