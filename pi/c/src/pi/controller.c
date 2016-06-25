@@ -28,25 +28,34 @@ using namespace std;
 #define COMPLETE  1
 #define NONE      2
 
-//受信データ
-vector<string> data{};
-//データの長さ
-int dataLength = 1;
-//データのインデックス
-int dataIndex = 0;
+//受信フレーム列
+vector<vector<string>> frameList;
+//フレーム列の長さ
+int frameListLength = 1;
+//フレーム列のインデックス
+int frameListIndex = 0;
+//フレーム列の切り替え速度
+int frameListInterval = 1000000;
+
+//現在のフレーム
+vector<string> lineList;
+//ラインのインデックス
+int lineListIndex = 0;
+//ラインの長さ
+int lineListLength = 0;
 
 //現在ステータス
 int status = NONE;
 //1回転の秒数(マイクロ秒)
 unsigned int rpMicros = 1000000;
-//1データの表示時間
-unsigned int dataMicros;
+//1ラインの表示時間
+unsigned int lineMicros;
 
 void update()
 {
-	//一回転の時間をデータ数で割って１データを表示する時間を求めるのです
-	dataMicros = rpMicros / dataLength;
-	dataIndex = 0;
+	//一回転の時間をライン数で割って表示する時間を求めるのです
+	lineMicros = rpMicros / lineListLength;
+	lineListIndex = 0;
 }
 void write(string val)
 {
@@ -64,41 +73,34 @@ void* thread_command(void* args)
 {
 	while(1){
 		string str;
-		char head;
-
 		cin >> str;
-		head = str[0];
-
-		if(head == '<'){
-			//読み込み中にする
-			printf("begin data\n");
+		if(str == "begin"){
 			status = READING;
-			data.clear();
-			continue;
-		}else if(head == '>'){
-			//読み込み終了にする
-			printf("end data\n");
-			status = COMPLETE;
-			dataLength = data.size();
-			//データ数が変わったので。
-			update();
-			continue;
-		}else if(head == 's'){
-			status = NONE;
-			cin >> rpMicros;
-			status = COMPLETE;
-			//１回転あたりの時間が変わったので。
-			update();
-		}
+			cout << "begin" << endl;
+			cin >> lineListLength;
+			cout << "ライン数 > " << lineListLength << "ライン" << endl;
+			cin >> frameListLength;
+			cout << "フレーム数 > " << frameListLength << "フレーム" << endl;
+			cin >> frameListInterval;
+			cout << "フレーム秒 > " << frameListInterval << "μs" << endl;
 
-		if(status == READING){
-			data.push_back(str);
-		}else if(status == COMPLETE){
-			//何もしない
-		}else if(status == NONE){
-			//何もしない
+			vector<string> tmpLineList;
+			string tmpLine;
+			frameList.clear();
+			//全フレーム収集
+			for(int frameListIndex = 0; frameListIndex < frameListLength; frameListIndex ++){
+				//全ライン収集
+				tmpLineList.clear();
+				for(int lineListIndex = 0; lineListIndex < lineListLength; lineListIndex ++){
+					cin >> tmpLine;
+					tmpLineList.push_back(tmpLine);
+				}
+				frameList.push_back(tmpLineList);
+				cout << "フレーム" << (frameListIndex+1) << "/" << frameListLength << endl;
+			}
+			cout << "end" << endl;
+			status = COMPLETE;
 		}
-		//write( DATAPIN, CLOCKPIN, LED_LENGTH, str);
 	}
 	return NULL;
 }
@@ -127,7 +129,7 @@ void* thread_rotationTimer(void* args)
 	return NULL;
 }
 //アニメーション用スレッド
-void* thread_animate(void* args)
+void* thread_render(void* args)
 {
 	unsigned long pt = 0, nt = 0;
 	timeval time;
@@ -135,12 +137,12 @@ void* thread_animate(void* args)
 		if(status != COMPLETE) continue;
 		gettimeofday(&time, NULL);
 		nt = (time.tv_sec * 1000000ULL + time.tv_usec);
-		if(pt + dataMicros < nt ){
+		if(pt + lineMicros < nt ){
 			pt = nt;
-			if(dataIndex >= dataLength) dataIndex = 0;
-			digitalWrite(DEBUGLEDPIN, dataIndex == 0);
-			write(data[dataIndex]);
-			dataIndex ++;
+			if(lineListIndex >= lineListLength) lineListIndex = 0;
+			digitalWrite(DEBUGLEDPIN, lineListIndex == 0);
+			write(lineList[lineListIndex]);
+			lineListIndex ++;
 		}
 	}
 	return NULL;
@@ -159,17 +161,16 @@ int main(void)
 	pinMode(CLOCKPIN, OUTPUT);
 	pinMode(DEBUGLEDPIN, OUTPUT);
 
-	pthread_t _thread_command;
-	pthread_create(&_thread_command, NULL, thread_command, (void *)NULL);
-
 	pthread_t _thread_rotationTimer;
 	pthread_create(&_thread_rotationTimer, NULL, thread_rotationTimer, (void *)NULL);
 
-	pthread_t _thread_animate;
-	pthread_create(&_thread_animate, NULL, thread_animate, (void *)NULL);
+	pthread_t _thread_render;
+	pthread_create(&_thread_render, NULL, thread_render, (void *)NULL);
+
+	pthread_t _thread_command;
+	pthread_create(&_thread_command, NULL, thread_command, (void *)NULL);
 
 	while(1){
-
 	}
 	return 0;
 }
