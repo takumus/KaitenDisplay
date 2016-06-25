@@ -16,7 +16,7 @@ package com.takumus.kaitenDisplay
 			_centerRadiusRatio = centerRadiusCM / lengthCM;
 			_ledLength = ledLength;
 		}
-		public function generate(bmd:BitmapData, dataLength:int = 360):String
+		public function generate(bmd:BitmapData, dataLength:int = 360, blackIsTrue:Boolean = true):String
 		{
 			//正方形を想定してるのでwidth優先でいく
 			var size:int = bmd.width;
@@ -51,8 +51,8 @@ package com.takumus.kaitenDisplay
 					var x:Number = Math.cos(rad)* radius + cx;
 					var y:Number = Math.sin(rad)* radius + cy;
 					var fill:Boolean = bmd.getPixel(x, y) == 0;
-					
-					Canvas.sprite.graphics.beginFill(fill?0xff0000:0xCCCCCC);
+					fill = blackIsTrue?fill:!fill;
+					Canvas.sprite.graphics.beginFill(fill?0xff0000:0x000000);
 					Canvas.sprite.graphics.drawCircle(x, y, 2);
 					childData.push(fill?1:0);
 					
