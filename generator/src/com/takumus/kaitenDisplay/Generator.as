@@ -40,7 +40,8 @@ package com.takumus.kaitenDisplay
 			trace("LED個数:"+_ledLength);
 			trace("LED長さ:"+(_ledLength-1) * ledInterval);
 			var data:Array = [];
-			for(var rad:Number = 0; rad < radMax; rad += radRate){
+			for(var r:int = 0; r < dataLength; r ++){
+				var rad:Number = radRate * r;
 				var childData:Array = [];
 				data.push(childData);
 				for(var ledId:int = 0; ledId < _ledLength; ledId ++){

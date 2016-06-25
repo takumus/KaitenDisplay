@@ -28,9 +28,9 @@ package
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(e:Event):void{
 				var bmd:BitmapData = new BitmapData(loader.width, loader.height, false, 0xffffff);
 				bmd.draw(loader);
-				var data:String = g.generate(bmd,600);
+				var data:String = g.generate(bmd,300);
 				trace(data);
-				Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, "<\n"+data+">\n");
+				Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, data+"\n");
 				stage.stageWidth = bmd.width;
 				stage.stageHeight = bmd.height;
 			});
