@@ -124,7 +124,7 @@ void* thread_rotationTimer(void* args)
 			diff = nt - pt;
 			if(diff > 100000){
 				pt = nt;
-				cout << diff << endl;
+				//cout << diff << endl;
 				rpMicros = diff;
 				update();
 			}
