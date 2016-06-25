@@ -51,6 +51,9 @@ unsigned int rpMicros = 1000000;
 //1ラインの表示時間
 unsigned int lineMicros = 100000;
 
+//排他制御
+pthread_mutex_t mutex;
+
 unsigned long getTime()
 {
 	timeval time;
@@ -82,7 +85,8 @@ void* thread_command(void* args)
 		string str;
 		cin >> str;
 		if(str == "begin"){
-			status = READING;
+			pthread_mutex_lock(&mutex);
+			//status = READING;
 			cout << "+データ" << endl;
 			cin >> lineListLength;
 			cout << "	-ライン数   > " << lineListLength << "ライン" << endl;
@@ -92,7 +96,7 @@ void* thread_command(void* args)
 			cout << "	-フレーム秒 > " << frameListInterval << "μs" << endl;
 			cout << "	+フレーム" << endl;
 			string tmpLine;
-			frameList.clear();
+			vector<vector<string>> tmpFrameList;
 			//全フレーム収集
 			for(int frameListIndex = 0; frameListIndex < frameListLength; frameListIndex ++){
 				//全ライン収集
@@ -101,12 +105,16 @@ void* thread_command(void* args)
 					cin >> tmpLine;
 					tmpLineList.push_back(tmpLine);
 				}
-				frameList.push_back(tmpLineList);
+				tmpFrameList.push_back(tmpLineList);
 				cout << "		-フレーム" << (frameListIndex+1) << "/" << frameListLength << endl;
 			}
 			cout << "	-フレーム" << endl;
 			cout << "-データ" << endl;
+			frameList = tmpFrameList;
 			status = COMPLETE;
+			frameListIndex = 0;
+			lineListIndex = 0;
+			pthread_mutex_unlock(&mutex);
 		}
 	}
 	return NULL;
@@ -142,12 +150,14 @@ void* thread_render(void* args)
 		nt = getTime();
 		if(pt + lineMicros < nt ){
 			pt = nt;
+			pthread_mutex_lock(&mutex);
 			if(lineListIndex >= lineListLength) lineListIndex = 0;
 			//フレームを取得
 			lineList = frameList[frameListIndex];
 			digitalWrite(DEBUGLEDPIN, lineListIndex == 0);
 			write(lineList[lineListIndex]);
 			lineListIndex ++;
+			pthread_mutex_unlock(&mutex);
 		}
 	}
 	return NULL;
@@ -161,9 +171,10 @@ void* thread_frame(void* args)
 		nt = getTime();
 		if(pt + frameListInterval < nt ){
 			pt = nt;
+			pthread_mutex_lock(&mutex);
 			frameListIndex ++;
 			if(frameListIndex >= frameListLength) frameListIndex = 0;
-			//cout << frameListIndex << endl;
+			pthread_mutex_unlock(&mutex);
 		}
 	}
 	return NULL;
@@ -181,6 +192,8 @@ int main(void)
 	pinMode(CLOCKPIN, OUTPUT);
 	pinMode(DEBUGLEDPIN, OUTPUT);
 
+	pthread_mutex_init(&mutex, NULL);
+
 	pthread_t _thread_rotationTimer;
 	pthread_create(&_thread_rotationTimer, NULL, thread_rotationTimer, (void *)NULL);
 
@@ -195,5 +208,6 @@ int main(void)
 
 	while(1){
 	}
+	pthread_mutex_destroy(&mutex);
 	return 0;
 }
