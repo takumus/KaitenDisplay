@@ -83,14 +83,14 @@ void* thread_command(void* args)
 		cin >> str;
 		if(str == "begin"){
 			status = READING;
-			cout << "begin" << endl;
+			cout << "+データ" << endl;
 			cin >> lineListLength;
-			cout << "ライン数 > " << lineListLength << "ライン" << endl;
+			cout << "	-ライン数   > " << lineListLength << "ライン" << endl;
 			cin >> frameListLength;
-			cout << "フレーム数 > " << frameListLength << "フレーム" << endl;
+			cout << "	-フレーム数 > " << frameListLength << "フレーム" << endl;
 			cin >> frameListInterval;
-			cout << "フレーム秒 > " << frameListInterval << "μs" << endl;
-
+			cout << "	-フレーム秒 > " << frameListInterval << "μs" << endl;
+			cout << "	+フレーム" << endl;
 			string tmpLine;
 			frameList.clear();
 			//全フレーム収集
@@ -102,9 +102,10 @@ void* thread_command(void* args)
 					tmpLineList.push_back(tmpLine);
 				}
 				frameList.push_back(tmpLineList);
-				cout << "フレーム" << (frameListIndex+1) << "/" << frameListLength << endl;
+				cout << "		-フレーム" << (frameListIndex+1) << "/" << frameListLength << endl;
 			}
-			cout << "end" << endl;
+			cout << "	-フレーム" << endl;
+			cout << "-データ" << endl;
 			status = COMPLETE;
 		}
 	}
