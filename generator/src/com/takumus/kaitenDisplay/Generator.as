@@ -39,6 +39,8 @@ package com.takumus.kaitenDisplay
 			trace("LED間隔:"+ledInterval);
 			trace("LED個数:"+_ledLength);
 			trace("LED長さ:"+(_ledLength-1) * ledInterval);
+			//Canvas.sprite.graphics.clear();
+			//Canvas.sprite.cacheAsBitmap = false;
 			var data:Array = [];
 			for(var r:int = 0; r < dataLength; r ++){
 				var rad:Number = radRate * r;

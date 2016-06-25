@@ -25,15 +25,15 @@ package
 			g.init(48, 48, 0);
 			
 			var loader:Loader = new Loader();
+			var line:int = 360;
 			loader.load(new URLRequest("file:///C:/Users/takumus/Desktop/testimage.png?"+new Date().getTime()));
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(e:Event):void{
+				stage.stageWidth = loader.width;
+				stage.stageHeight = loader.height;
+				
 				var bmd:BitmapData = new BitmapData(loader.width, loader.height, false, 0xffffff);
 				bmd.draw(loader);
-				var data:String = g.generate(bmd,600);
-				trace(data);
-				Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, data+"\n");
-				stage.stageWidth = bmd.width;
-				stage.stageHeight = bmd.height;
+				var data:String = g.generate(bmd, line);
 				
 				var m:Socket = new Socket();
 				m.connect("raspberrypi.local", 3001);
@@ -41,16 +41,21 @@ package
 				trace("connecting");
 				m.addEventListener(Event.CONNECT, function(e:Event):void
 				{
+					var frames:int = 100;
 					//開始
 					m.writeUTFBytes("begin\n");
-					//600ライン
-					m.writeUTFBytes("600\n");
-					//1フレーム
-					m.writeUTFBytes("1\n");
-					//1秒
-					m.writeUTFBytes("1000000\n");
+					//ライン
+					m.writeUTFBytes(line + "\n");
+					//フレーム
+					m.writeUTFBytes(frames + "\n");
+					//フレーム秒
+					m.writeUTFBytes((1000000/6)+"\n");
 					//データ
-					m.writeUTFBytes(data+"\n");
+					var d:String = "";
+					for(var i:int = 0; i < frames; i ++){
+						d += data + "\n";
+					}
+					m.writeUTFBytes(d);
 					m.flush();
 					trace("send");
 				});

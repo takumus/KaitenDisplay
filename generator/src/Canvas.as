@@ -8,14 +8,13 @@ package
 		public function Canvas()
 		{
 		}
-		private static var _sprite:Sprite;
+		private static var _sprite:Sprite = new Sprite();
 		public static function get sprite():Sprite
 		{
 			return _sprite;
 		}
 		public static function init(stage:Stage):void
 		{
-			_sprite = new Sprite();
 			stage.addChild(_sprite);
 		}
 	}
