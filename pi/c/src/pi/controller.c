@@ -49,7 +49,14 @@ int status = NONE;
 //1回転の秒数(マイクロ秒)
 unsigned int rpMicros = 1000000;
 //1ラインの表示時間
-unsigned int lineMicros;
+unsigned int lineMicros = 100000;
+
+unsigned long getTime()
+{
+	timeval time;
+	gettimeofday(&time, NULL);
+	return (time.tv_sec * 1000000ULL + time.tv_usec);
+}
 
 void update()
 {
@@ -84,13 +91,12 @@ void* thread_command(void* args)
 			cin >> frameListInterval;
 			cout << "フレーム秒 > " << frameListInterval << "μs" << endl;
 
-			vector<string> tmpLineList;
 			string tmpLine;
 			frameList.clear();
 			//全フレーム収集
 			for(int frameListIndex = 0; frameListIndex < frameListLength; frameListIndex ++){
 				//全ライン収集
-				tmpLineList.clear();
+				vector<string> tmpLineList;
 				for(int lineListIndex = 0; lineListIndex < lineListLength; lineListIndex ++){
 					cin >> tmpLine;
 					tmpLineList.push_back(tmpLine);
@@ -108,19 +114,17 @@ void* thread_command(void* args)
 void* thread_rotationTimer(void* args)
 {
 	unsigned long pt = 0, nt = 0, diff;
-	timeval time;
 	int prevStatus = 1;
 	while(1){
 		int status = digitalRead(INPUTPIN);
 		if(status == prevStatus) continue;
 		prevStatus = status;
 		if(status == 0){
-			gettimeofday(&time, NULL);
-			nt = (time.tv_sec * 1000000ULL + time.tv_usec);
+			nt = getTime();
 			diff = nt - pt;
 			if(diff > 100000){
 				pt = nt;
-				printf("%d\n", diff);
+				cout << diff << endl;
 				rpMicros = diff;
 				update();
 			}
@@ -128,21 +132,37 @@ void* thread_rotationTimer(void* args)
 	}
 	return NULL;
 }
-//アニメーション用スレッド
+//レンダリング用スレッド
 void* thread_render(void* args)
 {
 	unsigned long pt = 0, nt = 0;
-	timeval time;
 	while(1){
 		if(status != COMPLETE) continue;
-		gettimeofday(&time, NULL);
-		nt = (time.tv_sec * 1000000ULL + time.tv_usec);
+		nt = getTime();
 		if(pt + lineMicros < nt ){
 			pt = nt;
 			if(lineListIndex >= lineListLength) lineListIndex = 0;
+			//フレームを取得
+			lineList = frameList[frameListIndex];
 			digitalWrite(DEBUGLEDPIN, lineListIndex == 0);
 			write(lineList[lineListIndex]);
 			lineListIndex ++;
+		}
+	}
+	return NULL;
+}
+//フレーム進行用スレッド
+void* thread_frame(void* args)
+{
+	unsigned long pt = 0, nt = 0;
+	while(1){
+		if(status != COMPLETE) continue;
+		nt = getTime();
+		if(pt + frameListInterval < nt ){
+			pt = nt;
+			frameListIndex ++;
+			if(frameListIndex >= frameListLength) frameListIndex = 0;
+			//cout << frameListIndex << endl;
 		}
 	}
 	return NULL;
@@ -151,7 +171,6 @@ void* thread_render(void* args)
 int main(void)
 {
 	if(wiringPiSetup() == -1){
-		printf("error wiringPi setup\n");
 		return 1;
 	}
 	pullUpDnControl(INPUTPIN, PUD_UP);
@@ -163,6 +182,9 @@ int main(void)
 
 	pthread_t _thread_rotationTimer;
 	pthread_create(&_thread_rotationTimer, NULL, thread_rotationTimer, (void *)NULL);
+
+	pthread_t _thread_frame;
+	pthread_create(&_thread_frame, NULL, thread_frame, (void *)NULL);
 
 	pthread_t _thread_render;
 	pthread_create(&_thread_render, NULL, thread_render, (void *)NULL);
