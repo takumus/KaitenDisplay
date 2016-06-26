@@ -24,7 +24,7 @@ package
 			
 			Canvas.init(this.stage, 0x000000);
 			var g:Generator = new Generator();
-			g.init(48, 48, 0);
+			g.init(48, 48, 20);
 			
 			var loader:Loader = new Loader();
 			var line:int = 660;
@@ -35,7 +35,7 @@ package
 				
 				var bmd:BitmapData = new BitmapData(loader.width, loader.height, false, 0xffffff);
 				bmd.draw(loader);
-				//var data:String = g.generate(threshold_filter(bmd), line, false);
+				var data:String = g.generate(threshold_filter(bmd), line, false);
 				
 				var m:Socket = new Socket();
 				m.connect("raspberrypi.local", 3001);

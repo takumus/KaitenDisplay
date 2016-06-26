@@ -30,7 +30,7 @@ package
 			_bitmapData = new BitmapData(props.image.width, props.image.height, false, 0xffffff);
 			_imageBytes.position = 0;
 			_bitmapData.setPixels(_bitmapData.rect, _imageBytes);
-			_workerToMain.send(_generator.generate(props.ledLength, props.ledArrayLengthCM, props.centerRadiusCM, _bitmapData, props.lineLength, props.blackIsTrue));
+			_workerToMain.send(_generator.generate(_bitmapData, props.ledLength, props.ledArrayLengthCM, props.centerRadiusCM, props.lineLength, props.blackIsTrue));
 		}
 	}
 }
@@ -46,7 +46,7 @@ class _Generator
 	public function _Generator()
 	{
 	}
-	public function generate(ledLength:int, ledArrayLengthCM:Number, centerRadiusCM:Number, bmd:BitmapData, lineLength:int = 360, blackIsTrue:Boolean = true):String
+	public function generate(bmd:BitmapData, ledLength:int, ledArrayLengthCM:Number, centerRadiusCM:Number, lineLength:int = 360, blackIsTrue:Boolean = true):String
 	{
 		var lengthCM:Number = ledArrayLengthCM + centerRadiusCM;
 		_centerRadiusRatio = centerRadiusCM / lengthCM;

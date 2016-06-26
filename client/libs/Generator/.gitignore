@@ -1,5 +1,4 @@
+.settings
 .actionScriptProperties
+.flexLibProperties
 .project
-.settings/org.eclipse.core.resources.prefs
-bin-debug/
-src/Generator-app.xml
