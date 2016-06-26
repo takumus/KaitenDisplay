@@ -1,24 +1,36 @@
 package
 {
+	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.geom.Rectangle;
 	import flash.system.MessageChannel;
 	import flash.system.Worker;
+	import flash.utils.ByteArray;
 	
 	public class GeneratorWorker extends Sprite
 	{
 		private var _mainToWorker:MessageChannel;
 		private var _workerToMain:MessageChannel;
+		private var _generator:_Generator;
+		private var _bitmapData:BitmapData;
+		private var _imageBytes:ByteArray;
 		public function GeneratorWorker()
 		{
+			_generator = new _Generator();
 			_mainToWorker = Worker.current.getSharedProperty("mainToWorker");
 			_workerToMain = Worker.current.getSharedProperty("workerToMain");
-			
+			_imageBytes = Worker.current.getSharedProperty("imageBytes");
 			_mainToWorker.addEventListener(Event.CHANNEL_MESSAGE, getMessage);
 		}
 		private function getMessage(event:Event):void
 		{
-			_workerToMain.send("hi "+_mainToWorker.receive());
+			var props:Object = _mainToWorker.receive();
+			if(_bitmapData) _bitmapData.dispose();
+			_bitmapData = new BitmapData(props.image.width, props.image.height, false, 0xffffff);
+			_imageBytes.position = 0;
+			_bitmapData.setPixels(_bitmapData.rect, _imageBytes);
+			_workerToMain.send(_generator.generate(props.ledLength, props.ledArrayLengthCM, props.centerRadiusCM, _bitmapData, props.lineLength, props.blackIsTrue));
 		}
 	}
 }
@@ -34,14 +46,12 @@ class _Generator
 	public function _Generator()
 	{
 	}
-	public function init(ledLength:int, ledArrayLengthCM:Number, centerRadiusCM:Number):void
+	public function generate(ledLength:int, ledArrayLengthCM:Number, centerRadiusCM:Number, bmd:BitmapData, lineLength:int = 360, blackIsTrue:Boolean = true):String
 	{
 		var lengthCM:Number = ledArrayLengthCM + centerRadiusCM;
 		_centerRadiusRatio = centerRadiusCM / lengthCM;
 		_ledLength = ledLength;
-	}
-	public function generate(bmd:BitmapData, dataLength:int = 360, blackIsTrue:Boolean = true):String
-	{
+		
 		//正方形を想定してるのでwidth優先でいく
 		var size:int = bmd.width;
 		var rect:Rectangle = bmd.rect;
@@ -49,7 +59,7 @@ class _Generator
 		var cx:Number = size / 2;
 		var cy:Number = size / 2;
 		//角度の刻み
-		var radRate:Number = (Math.PI*2)/dataLength;
+		var radRate:Number = (Math.PI*2)/lineLength;
 		var radMax:Number = Math.PI*2;
 		//終了半径(ただの半径)
 		var endRadius:Number = (size / 2)-1;
@@ -66,7 +76,7 @@ class _Generator
 		//Canvas.sprite.graphics.clear();
 		//Canvas.sprite.cacheAsBitmap = false;
 		var data:Array = [];
-		for(var r:int = 0; r < dataLength; r ++){
+		for(var r:int = 0; r < lineLength; r ++){
 			var rad:Number = radRate * r;
 			var childData:Array = [];
 			data.push(childData);
