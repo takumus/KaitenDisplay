@@ -1,6 +1,7 @@
 package
 {
 	import com.takumus.kaitenDisplay.Generator;
+	import com.takumus.kaitenDisplay.GeneratorEvent;
 	
 	import flash.desktop.Clipboard;
 	import flash.desktop.ClipboardFormats;
@@ -24,7 +25,6 @@ package
 			
 			Canvas.init(this.stage, 0x000000);
 			var g:Generator = new Generator();
-			g.init(48, 48, 20);
 			
 			var loader:Loader = new Loader();
 			var line:int = 660;
@@ -35,32 +35,28 @@ package
 				
 				var bmd:BitmapData = new BitmapData(loader.width, loader.height, false, 0xffffff);
 				bmd.draw(loader);
-				var data:String = g.generate(threshold_filter(bmd), line, false);
-				
-				var m:Socket = new Socket();
-				m.connect("raspberrypi.local", 3001);
-				
-				trace("connecting");
-				m.addEventListener(Event.CONNECT, function(e:Event):void
+				g.generate(threshold_filter(bmd), 48, 48, 20, line, false);
+				g.addEventListener(GeneratorEvent.COMPLETE, function(ge:GeneratorEvent):void
 				{
-					var frames:int = 2;
-					//開始
-					m.writeUTFBytes("begin\n");
-					//ライン
-					m.writeUTFBytes(line + "\n");
-					//フレーム
-					m.writeUTFBytes(frames + "\n");
-					//フレーム秒
-					m.writeUTFBytes((1000000*2)+"\n");
-					//データ
-					var d:String = "";
-					for(var i:int = 0; i < frames; i ++){
-						//d += data + "\n";
-					}
-					m.writeUTFBytes(g.generate(threshold_filter(bmd), line, false)+"\n");
-					m.writeUTFBytes(g.generate(threshold_filter(bmd), line, true)+"\n");
-					m.flush();
-					trace("send");
+					var m:Socket = new Socket();
+					m.connect("raspberrypi.local", 3001);
+					trace("connecting");
+					m.addEventListener(Event.CONNECT, function(e:Event):void
+					{
+						trace("connected");
+						var frames:int = 2;
+						//開始
+						m.writeUTFBytes("begin\n");
+						//ライン
+						m.writeUTFBytes(line + "\n");
+						//フレーム
+						m.writeUTFBytes(frames + "\n");
+						//フレーム秒
+						m.writeUTFBytes((1000000*2)+"\n");
+						//データ
+						m.writeUTFBytes(ge.data+"\n");
+						m.flush();
+					});
 				});
 			});
 		}
