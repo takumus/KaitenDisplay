@@ -23,7 +23,6 @@ package com.takumus.kaitenDisplay
 			_imageBytes.shareable = true;
 			
 			_worker = WorkerDomain.current.createWorker(new WorkerChild());
-			
 			_mainToWorker = Worker.current.createMessageChannel(_worker);
 			_workerToMain = _worker.createMessageChannel(Worker.current);
 			
@@ -57,7 +56,7 @@ package com.takumus.kaitenDisplay
 				ledArrayLengthCM:ledArrayLengthCM,
 				centerRadiusCM:centerRadiusCM,
 				lineLength:lineLength,
-				blackIsTrue:true,
+				blackIsTrue:blackIsTrue,
 				image:{
 					width:bmd.width,
 					height:bmd.height
@@ -68,6 +67,10 @@ package com.takumus.kaitenDisplay
 		public function get isWorking():Boolean
 		{
 			return _working;
+		}
+		public function close():void
+		{
+			_worker.terminate();
 		}
 	}
 }
