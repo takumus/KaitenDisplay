@@ -32,7 +32,7 @@ package
 				_imageBytes.position = 0;
 				_bitmapData.setPixels(_bitmapData.rect, _imageBytes);
 				_workerToMain.send({
-					data:_generator.generate(_bitmapData, props.ledLength, props.ledArrayLengthCM, props.centerRadiusCM, props.lineLength, props.blackIsTrue),
+					data:_generator.generate(_bitmapData, props.ledLength, props.ledArrayLengthCM, props.centerRadiusCM, props.resolution, props.blackIsTrue),
 					status:0
 				});
 			}catch(e:Error){
@@ -56,7 +56,7 @@ class _Generator
 	public function _Generator()
 	{
 	}
-	public function generate(bmd:BitmapData, ledLength:int, ledArrayLengthCM:Number, centerRadiusCM:Number, lineLength:int = 360, blackIsTrue:Boolean = true):String
+	public function generate(bmd:BitmapData, ledLength:int, ledArrayLengthCM:Number, centerRadiusCM:Number, resolution:int = 360, blackIsTrue:Boolean = true):String
 	{
 		var lengthCM:Number = ledArrayLengthCM + centerRadiusCM;
 		_centerRadiusRatio = centerRadiusCM / lengthCM;
@@ -69,7 +69,7 @@ class _Generator
 		var cx:Number = size / 2;
 		var cy:Number = size / 2;
 		//角度の刻み
-		var radRate:Number = (Math.PI*2)/lineLength;
+		var radRate:Number = (Math.PI*2)/resolution;
 		var radMax:Number = Math.PI*2;
 		//終了半径(ただの半径)
 		var endRadius:Number = (size / 2)-1;
@@ -86,7 +86,7 @@ class _Generator
 		//Canvas.sprite.graphics.clear();
 		//Canvas.sprite.cacheAsBitmap = false;
 		var data:Array = [];
-		for(var r:int = 0; r < lineLength; r ++){
+		for(var r:int = 0; r < resolution; r ++){
 			var rad:Number = radRate * r;
 			var childData:Array = [];
 			data.push(childData);

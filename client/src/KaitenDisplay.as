@@ -17,6 +17,8 @@ package
 	import flash.net.URLRequest;
 	import flash.utils.getTimer;
 	
+	import renderer.Renderer;
+	
 	public class KaitenDisplay extends Sprite
 	{
 		public function KaitenDisplay()
@@ -37,7 +39,7 @@ package
 				var bmd:BitmapData = new BitmapData(loader.width, loader.height, false, 0xffffff);
 				bmd.draw(loader);
 				bmd = threshold_filter(bmd);
-				for(var i:int= 0; i < 100; i ++){
+				for(var i:int= 0; i < 1; i ++){
 					g.add(bmd);
 				}
 				var t:int = getTimer();
@@ -49,7 +51,7 @@ package
 				{
 					trace(getTimer() - t);
 					var m:Socket = new Socket();
-					m.connect("raspberrypi.local", 3001);
+					//m.connect("raspberrypi.local", 3001);
 					trace("connecting");
 					m.addEventListener(Event.CONNECT, function(e:Event):void
 					{
@@ -67,9 +69,11 @@ package
 						m.writeUTFBytes(se.data);
 						m.flush();
 					});
+					
+					new Renderer().setData(se.data, 48, 48, 0, line, g.length);
 				});
 				
-				g.setOptions(48, 48, 0, line, true);
+				g.setOptions(48, 48, 0, line, false);
 				g.generate();
 			});
 		}
