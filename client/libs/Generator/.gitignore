@@ -2,4 +2,4 @@
 .project
 .settings/org.eclipse.core.resources.prefs
 bin-debug/
-src/KaitenDisplay-app.xml
+src/Generator-app.xml
