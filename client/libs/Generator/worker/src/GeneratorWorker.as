@@ -27,10 +27,20 @@ package
 		{
 			var props:Object = _mainToWorker.receive();
 			if(_bitmapData) _bitmapData.dispose();
-			_bitmapData = new BitmapData(props.image.width, props.image.height, false, 0xffffff);
-			_imageBytes.position = 0;
-			_bitmapData.setPixels(_bitmapData.rect, _imageBytes);
-			_workerToMain.send(_generator.generate(_bitmapData, props.ledLength, props.ledArrayLengthCM, props.centerRadiusCM, props.lineLength, props.blackIsTrue));
+			try{
+				_bitmapData = new BitmapData(props.image.width, props.image.height, false, 0xffffff);
+				_imageBytes.position = 0;
+				_bitmapData.setPixels(_bitmapData.rect, _imageBytes);
+				_workerToMain.send({
+					data:_generator.generate(_bitmapData, props.ledLength, props.ledArrayLengthCM, props.centerRadiusCM, props.lineLength, props.blackIsTrue),
+					status:0
+				});
+			}catch(e:Error){
+				_workerToMain.send({
+					data:"",
+					status:1
+				});
+			}
 		}
 	}
 }
@@ -87,7 +97,6 @@ class _Generator
 				var fill:Boolean = bmd.getPixel(x, y) == 0;
 				fill = blackIsTrue?fill:!fill;
 				childData.push(fill?1:0);
-				
 			}
 		}
 		return convertData(data);

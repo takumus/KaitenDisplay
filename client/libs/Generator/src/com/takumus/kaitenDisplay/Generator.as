@@ -1,16 +1,16 @@
-package
+package com.takumus.kaitenDisplay
 {
 	import flash.display.BitmapData;
 	import flash.events.Event;
-	import flash.events.MouseEvent;
+	import flash.events.EventDispatcher;
 	import flash.system.MessageChannel;
 	import flash.system.Worker;
 	import flash.system.WorkerDomain;
 	import flash.utils.ByteArray;
 	
-	public class Generator
+	public class Generator extends EventDispatcher
 	{
-		[Embed(source="../worker/bin/GeneratorWorker.swf", mimeType="application/octet-stream")]
+		[Embed(source="../../../worker/GeneratorWorker.swf", mimeType="application/octet-stream")]
 		private static var WorkerChild:Class;
 		
 		private var _worker:Worker;
@@ -35,7 +35,15 @@ package
 		}
 		private function getMessage(event:Event):void
 		{
-			trace(_workerToMain.receive());
+			var props:Object = _workerToMain.receive();
+			var ge:GeneratorEvent;
+			if(props.status == 0){
+				ge = new GeneratorEvent(GeneratorEvent.COMPLETE);
+				ge._data = props.data;
+			}else{
+				ge = new GeneratorEvent(GeneratorEvent.ERROR);
+			}
+			dispatchEvent(ge);
 		}
 		public function generate(bmd:BitmapData, ledLength:uint, ledArrayLengthCM:Number, centerRadiusCM:Number, lineLength:uint, blackIsTrue:Boolean):void
 		{
