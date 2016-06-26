@@ -33,6 +33,8 @@ package renderer
 		}
 		public function render(frameId:int, width:Number, height:Number):void
 		{
+			this.cacheAsBitmap = false;
+			this.graphics.clear();
 			var frame:Array = _frames[frameId];
 			var size:Number = width < height ? width : height;
 			var cx:Number = width / 2;
@@ -60,6 +62,7 @@ package renderer
 					}
 				}
 			}
+			this.cacheAsBitmap = true;
 		}
 	}
 }

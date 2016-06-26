@@ -36,7 +36,7 @@ package
 			this.addChild(r);
 			
 			var options:DisplayOptions = new DisplayOptions();
-			options.setOptions(48, 48, 10, line, false);
+			options.setOptions(48, 48, 10, line, true);
 			
 			loader.load(new URLRequest("file:///C:/Users/takumus/Desktop/testimage.png?"+new Date().getTime()));
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(e:Event):void{
