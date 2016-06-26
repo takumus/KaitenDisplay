@@ -1,5 +1,6 @@
 package
 {
+	import com.takumus.kaitenDisplay.DisplayOptions;
 	import com.takumus.kaitenDisplay.Generator;
 	import com.takumus.kaitenDisplay.GeneratorEvent;
 	import com.takumus.kaitenDisplay.Serial;
@@ -26,11 +27,17 @@ package
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			
-			Canvas.init(this.stage, 0x000000);
+			//Canvas.init(this.stage, 0x000000);
 			var g:Serial = new Serial();
 			
 			var loader:Loader = new Loader();
-			var line:int = 300;
+			var line:int = 360;
+			var r:Renderer = new Renderer();
+			this.addChild(r);
+			
+			var options:DisplayOptions = new DisplayOptions();
+			options.setOptions(48, 48, 10, line);
+			
 			loader.load(new URLRequest("file:///C:/Users/takumus/Desktop/testimage.png?"+new Date().getTime()));
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(e:Event):void{
 				stage.stageWidth = loader.width;
@@ -39,7 +46,7 @@ package
 				var bmd:BitmapData = new BitmapData(loader.width, loader.height, false, 0xffffff);
 				bmd.draw(loader);
 				bmd = threshold_filter(bmd);
-				for(var i:int= 0; i < 1; i ++){
+				for(var i:int= 0; i < 4; i ++){
 					g.add(bmd);
 				}
 				var t:int = getTimer();
@@ -69,11 +76,11 @@ package
 						m.writeUTFBytes(se.data);
 						m.flush();
 					});
-					
-					new Renderer().setData(se.data, 48, 48, 0, line, g.length);
+					r.setData(se.data, g.length, options);
+					r.render(0, stage.stageWidth, stage.stageHeight);
 				});
 				
-				g.setOptions(48, 48, 0, line, false);
+				g.setOptions(options);
 				g.generate();
 			});
 		}
