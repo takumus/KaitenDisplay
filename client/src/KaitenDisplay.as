@@ -3,8 +3,6 @@ package
 	import com.takumus.kaitenDisplay.Generator;
 	import com.takumus.kaitenDisplay.GeneratorEvent;
 	
-	import flash.desktop.Clipboard;
-	import flash.desktop.ClipboardFormats;
 	import flash.display.BitmapData;
 	import flash.display.Loader;
 	import flash.display.Sprite;
@@ -35,6 +33,7 @@ package
 				
 				var bmd:BitmapData = new BitmapData(loader.width, loader.height, false, 0xffffff);
 				bmd.draw(loader);
+				
 				g.generate(threshold_filter(bmd), 48, 48, 20, line, false);
 				g.addEventListener(GeneratorEvent.COMPLETE, function(ge:GeneratorEvent):void
 				{
@@ -44,7 +43,7 @@ package
 					m.addEventListener(Event.CONNECT, function(e:Event):void
 					{
 						trace("connected");
-						var frames:int = 2;
+						var frames:int = 1;
 						//開始
 						m.writeUTFBytes("begin\n");
 						//ライン

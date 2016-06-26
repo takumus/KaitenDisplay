@@ -16,10 +16,11 @@ package com.takumus.kaitenDisplay
 		private var _worker:Worker;
 		private var _mainToWorker:MessageChannel;
 		private var _workerToMain:MessageChannel;
-		private var imageBytes:ByteArray = new ByteArray();
+		private var _imageBytes:ByteArray = new ByteArray();
+		private var _working:Boolean;
 		public function Generator()
 		{
-			imageBytes.shareable = true;
+			_imageBytes.shareable = true;
 			
 			_worker = WorkerDomain.current.createWorker(new WorkerChild());
 			
@@ -28,7 +29,7 @@ package com.takumus.kaitenDisplay
 			
 			_worker.setSharedProperty("mainToWorker", _mainToWorker);
 			_worker.setSharedProperty("workerToMain", _workerToMain);
-			_worker.setSharedProperty("imageBytes", imageBytes);
+			_worker.setSharedProperty("imageBytes", _imageBytes);
 			
 			_workerToMain.addEventListener(Event.CHANNEL_MESSAGE, getMessage);
 			_worker.start();
@@ -43,22 +44,30 @@ package com.takumus.kaitenDisplay
 			}else{
 				ge = new GeneratorEvent(GeneratorEvent.ERROR);
 			}
+			_working = false;
 			dispatchEvent(ge);
 		}
-		public function generate(bmd:BitmapData, ledLength:uint, ledArrayLengthCM:Number, centerRadiusCM:Number, lineLength:uint, blackIsTrue:Boolean):void
+		public function generate(bmd:BitmapData, ledLength:uint, ledArrayLengthCM:Number, centerRadiusCM:Number, lineLength:uint, blackIsTrue:Boolean):int
 		{
-			bmd.copyPixelsToByteArray(bmd.rect, imageBytes);
+			if(_working) return 1;
+			_working = true;
+			bmd.copyPixelsToByteArray(bmd.rect, _imageBytes);
 			_mainToWorker.send({
-				ledLength:48,
-				ledArrayLengthCM:48,
-				centerRadiusCM:0,
-				lineLength:360,
+				ledLength:ledLength,
+				ledArrayLengthCM:ledArrayLengthCM,
+				centerRadiusCM:centerRadiusCM,
+				lineLength:lineLength,
 				blackIsTrue:true,
 				image:{
 					width:bmd.width,
 					height:bmd.height
 				}
 			});
+			return 0;
+		}
+		public function get isWorking():Boolean
+		{
+			return _working;
 		}
 	}
 }
