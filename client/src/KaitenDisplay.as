@@ -52,11 +52,11 @@ package
 				var t:int = getTimer();
 				g.addEventListener(SerialEvent.ERROR, function(se:SerialEvent):void
 				{
-					trace("error");
+					//trace("error");
 				});
 				g.addEventListener(SerialEvent.COMPLETE, function(se:SerialEvent):void
 				{
-					trace(getTimer() - t);
+					//trace(getTimer() - t);
 					var m:Socket = new Socket();
 					//m.connect("raspberrypi.local", 3001);
 					trace("connecting");

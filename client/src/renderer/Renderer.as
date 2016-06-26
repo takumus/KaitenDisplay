@@ -40,18 +40,23 @@ package renderer
 			var radius:Number = size / 2;
 			var centerRadius:Number = radius * _centerRadiusRatio;
 			var ledRadius:Number = radius - centerRadius;
-			var resolution:int = 360;
+			var resolution:int = 600;
 			resolution =  resolution < frame.length ? frame.length : resolution;
 			var radianInterval:Number = Math.PI*2/resolution;
 			for(var radian:Number = 0; radian < Math.PI*2; radian += radianInterval){
 				var id:int = radian / (Math.PI*2) * frame.length;
 				var lines:Array = frame[id];
 				for(var l:int = 0; l < lines.length; l ++){
-					var x:Number = cx + Math.cos(radian) * (centerRadius + ledRadius * (l / lines.length));
-					var y:Number = cy + Math.sin(radian) * (centerRadius + ledRadius * (l / lines.length));
+					var tmpRadius:Number = (centerRadius + ledRadius * (l / lines.length));
+					var tmpRadian:Number = radian// - (Math.PI*2/frame.length/2);
+					var x:Number = cx + Math.cos(tmpRadian) * tmpRadius;
+					var y:Number = cy + Math.sin(tmpRadian) * tmpRadius;
+					var nx:Number = cx + Math.cos(tmpRadian + radianInterval) * tmpRadius;
+					var ny:Number = cy + Math.sin(tmpRadian + radianInterval) * tmpRadius;
 					if(lines[l] == 1){
-						this.graphics.beginFill(0xff0000);
-						this.graphics.drawCircle(x, y, 3);
+						this.graphics.lineStyle(3, 0xff0000);
+						this.graphics.moveTo(x, y);
+						this.graphics.lineTo(nx, ny);
 					}
 				}
 			}
