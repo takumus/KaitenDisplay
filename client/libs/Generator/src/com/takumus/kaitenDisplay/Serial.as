@@ -83,8 +83,3 @@ package com.takumus.kaitenDisplay
 		}
 	}
 }
-import com.takumus.kaitenDisplay.Generator;
-
-class GeneratorForParallel extends Generator{
-	public var id:int;
-}
