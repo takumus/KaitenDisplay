@@ -46,7 +46,7 @@ package com.takumus.kaitenDisplay
 			_working = false;
 			dispatchEvent(ge);
 		}
-		public function generate(bmd:BitmapData, ledLength:uint, ledArrayLengthCM:Number, centerRadiusCM:Number, resolution:uint, blackIsTrue:Boolean):int
+		public function generate(bmd:BitmapData, ledLength:uint, ledArrayLengthCM:Number, centerRadiusCM:Number, resolution:uint, negative:Boolean):int
 		{
 			if(_working) return 1;
 			try{
@@ -57,7 +57,7 @@ package com.takumus.kaitenDisplay
 					ledArrayLengthCM:ledArrayLengthCM,
 					centerRadiusCM:centerRadiusCM,
 					resolution:resolution,
-					blackIsTrue:blackIsTrue,
+					negative:negative,
 					image:{
 						width:bmd.width,
 						height:bmd.height

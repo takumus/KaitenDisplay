@@ -32,7 +32,7 @@ package
 				_imageBytes.position = 0;
 				_bitmapData.setPixels(_bitmapData.rect, _imageBytes);
 				_workerToMain.send({
-					data:_generator.generate(_bitmapData, props.ledLength, props.ledArrayLengthCM, props.centerRadiusCM, props.resolution, props.blackIsTrue),
+					data:_generator.generate(_bitmapData, props.ledLength, props.ledArrayLengthCM, props.centerRadiusCM, props.resolution, props.negative),
 					status:0
 				});
 			}catch(e:Error){
@@ -56,7 +56,7 @@ class _Generator
 	public function _Generator()
 	{
 	}
-	public function generate(bmd:BitmapData, ledLength:int, ledArrayLengthCM:Number, centerRadiusCM:Number, resolution:int = 360, blackIsTrue:Boolean = true):String
+	public function generate(bmd:BitmapData, ledLength:int, ledArrayLengthCM:Number, centerRadiusCM:Number, resolution:int = 360, negative:Boolean = true):String
 	{
 		var lengthCM:Number = ledArrayLengthCM + centerRadiusCM;
 		_centerRadiusRatio = centerRadiusCM / lengthCM;
@@ -95,7 +95,7 @@ class _Generator
 				var x:Number = Math.cos(rad)* radius + cx;
 				var y:Number = Math.sin(rad)* radius + cy;
 				var fill:Boolean = bmd.getPixel(x, y) == 0;
-				fill = blackIsTrue?fill:!fill;
+				fill = negative?!fill:fill;
 				childData.push(fill?1:0);
 			}
 		}

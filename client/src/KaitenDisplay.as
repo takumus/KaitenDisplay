@@ -36,7 +36,7 @@ package
 			this.addChild(r);
 			
 			var options:DisplayOptions = new DisplayOptions();
-			options.setOptions(48, 48, 10, line);
+			options.setOptions(48, 48, 10, line, false);
 			
 			loader.load(new URLRequest("file:///C:/Users/takumus/Desktop/testimage.png?"+new Date().getTime()));
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(e:Event):void{
@@ -58,7 +58,7 @@ package
 				{
 					//trace(getTimer() - t);
 					var m:Socket = new Socket();
-					//m.connect("raspberrypi.local", 3001);
+					m.connect("raspberrypi.local", 3001);
 					trace("connecting");
 					m.addEventListener(Event.CONNECT, function(e:Event):void
 					{
