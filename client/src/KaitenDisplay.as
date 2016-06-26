@@ -41,9 +41,11 @@ package
 					g.add(bmd);
 				}
 				var t:int = getTimer();
-				g.setOptions(48, 48, 0, line, true);
-				g.generate();
-				g.addEventListener(SerialEvent.COMPLETE, function(me:SerialEvent):void
+				g.addEventListener(SerialEvent.ERROR, function(se:SerialEvent):void
+				{
+					trace("error");
+				});
+				g.addEventListener(SerialEvent.COMPLETE, function(se:SerialEvent):void
 				{
 					trace(getTimer() - t);
 					var m:Socket = new Socket();
@@ -62,10 +64,13 @@ package
 						//フレーム秒
 						m.writeUTFBytes((1000000*2)+"\n");
 						//データ
-						m.writeUTFBytes(me.data);
+						m.writeUTFBytes(se.data);
 						m.flush();
 					});
 				});
+				
+				g.setOptions(48, 48, 0, line, true);
+				g.generate();
 			});
 		}
 		private function threshold_filter(s:BitmapData):BitmapData {

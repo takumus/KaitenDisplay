@@ -16,6 +16,7 @@ package com.takumus.kaitenDisplay
 			_bitmapDatas = new Vector.<BitmapData>();
 			_generator = new Generator();
 			_generator.addEventListener(GeneratorEvent.COMPLETE, generateNext);
+			_generator.addEventListener(GeneratorEvent.ERROR, onError);
 			setOptions(30, 30, 0, 30, true);
 		}
 		public function clear():void
@@ -33,7 +34,7 @@ package com.takumus.kaitenDisplay
 		public function setOptions(ledLength:uint, ledArrayLengthCM:Number, centerRadiusCM:Number, lineLength:uint, blackIsTrue:Boolean):void
 		{
 			if(_working) {
-				error_multiIsWorking();
+				error_working();
 				return;
 			}
 			_ledLength = ledLength;
@@ -45,7 +46,7 @@ package com.takumus.kaitenDisplay
 		public function generate():void
 		{
 			if(_working) {
-				error_multiIsWorking();
+				error_working();
 				return;
 			}
 			_working = true;
@@ -71,9 +72,14 @@ package com.takumus.kaitenDisplay
 			return _bitmapDatas.length;
 		}
 		
-		private function error_multiIsWorking():void
+		private function error_working():void
 		{
-			throw new Error("multi is working");
+			throw new Error("working");
+		}
+		private function onError(event:GeneratorEvent):void
+		{
+			_working = false;
+			dispatchEvent(new SerialEvent(SerialEvent.ERROR));
 		}
 	}
 }

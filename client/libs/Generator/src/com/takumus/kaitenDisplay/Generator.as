@@ -49,19 +49,23 @@ package com.takumus.kaitenDisplay
 		public function generate(bmd:BitmapData, ledLength:uint, ledArrayLengthCM:Number, centerRadiusCM:Number, lineLength:uint, blackIsTrue:Boolean):int
 		{
 			if(_working) return 1;
-			_working = true;
-			bmd.copyPixelsToByteArray(bmd.rect, _imageBytes);
-			_mainToWorker.send({
-				ledLength:ledLength,
-				ledArrayLengthCM:ledArrayLengthCM,
-				centerRadiusCM:centerRadiusCM,
-				lineLength:lineLength,
-				blackIsTrue:blackIsTrue,
-				image:{
-					width:bmd.width,
-					height:bmd.height
-				}
-			});
+			try{
+				_working = true;
+				bmd.copyPixelsToByteArray(bmd.rect, _imageBytes);
+				_mainToWorker.send({
+					ledLength:ledLength,
+					ledArrayLengthCM:ledArrayLengthCM,
+					centerRadiusCM:centerRadiusCM,
+					lineLength:lineLength,
+					blackIsTrue:blackIsTrue,
+					image:{
+						width:bmd.width,
+						height:bmd.height
+					}
+				});
+			}catch(e:Error){
+				dispatchEvent(new GeneratorEvent(GeneratorEvent.ERROR));
+			}
 			return 0;
 		}
 		public function get isWorking():Boolean
