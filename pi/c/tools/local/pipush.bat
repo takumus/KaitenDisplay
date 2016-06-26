@@ -1,1 +1,0 @@
-sh pipush %1

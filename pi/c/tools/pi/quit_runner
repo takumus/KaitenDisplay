@@ -1,2 +1,0 @@
-#!/bin/bash
-screen -X -S runner quit

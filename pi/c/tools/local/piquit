@@ -1,3 +1,0 @@
-#!/bin/bash
-QUIT_RUNNER_PATH="/home/pi/runner/quit_runner";
-ssh -i ~/.ssh/id_rsa pi@raspberrypi.local "$QUIT_RUNNER_PATH"
