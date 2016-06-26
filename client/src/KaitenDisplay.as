@@ -2,8 +2,8 @@ package
 {
 	import com.takumus.kaitenDisplay.Generator;
 	import com.takumus.kaitenDisplay.GeneratorEvent;
-	import com.takumus.kaitenDisplay.Multi;
-	import com.takumus.kaitenDisplay.MultiEvent;
+	import com.takumus.kaitenDisplay.Serial;
+	import com.takumus.kaitenDisplay.SerialEvent;
 	
 	import flash.display.BitmapData;
 	import flash.display.Loader;
@@ -25,7 +25,7 @@ package
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			
 			Canvas.init(this.stage, 0x000000);
-			var g:Multi = new Multi();
+			var g:Serial = new Serial();
 			
 			var loader:Loader = new Loader();
 			var line:int = 300;
@@ -37,10 +37,13 @@ package
 				var bmd:BitmapData = new BitmapData(loader.width, loader.height, false, 0xffffff);
 				bmd.draw(loader);
 				bmd = threshold_filter(bmd);
-				g.add(bmd);
+				for(var i:int= 0; i < 100; i ++){
+					g.add(bmd);
+				}
 				var t:int = getTimer();
-				g.generateSerial(48, 48, 0, line, false);
-				g.addEventListener(MultiEvent.COMPLETE, function(me:MultiEvent):void
+				g.setOptions(48, 48, 0, line, true);
+				g.generate();
+				g.addEventListener(SerialEvent.COMPLETE, function(me:SerialEvent):void
 				{
 					trace(getTimer() - t);
 					var m:Socket = new Socket();
