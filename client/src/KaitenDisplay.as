@@ -1,11 +1,14 @@
 package
 {
-	import com.takumus.kaitenDisplay.GeneratorOptions;
 	import com.takumus.kaitenDisplay.Generator;
 	import com.takumus.kaitenDisplay.GeneratorEvent;
+	import com.takumus.kaitenDisplay.GeneratorOptions;
+	import com.takumus.kaitenDisplay.Renderer;
+	import com.takumus.kaitenDisplay.RendererEvent;
 	import com.takumus.kaitenDisplay.Serial;
 	import com.takumus.kaitenDisplay.SerialEvent;
 	
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Loader;
 	import flash.display.Sprite;
@@ -18,7 +21,6 @@ package
 	import flash.net.URLRequest;
 	import flash.utils.getTimer;
 	
-	import renderer.Renderer;
 	
 	public class KaitenDisplay extends Sprite
 	{
@@ -33,7 +35,10 @@ package
 			var loader:Loader = new Loader();
 			var line:int = 360;
 			var r:Renderer = new Renderer();
-			this.addChild(r);
+			r.addEventListener(RendererEvent.COMPLETE, function(e:RendererEvent):void
+			{
+				addChild(new Bitmap(e.data));
+			});
 			
 			var options:GeneratorOptions = new GeneratorOptions();
 			options.setOptions(48, 48, 10, line, true);
@@ -76,8 +81,7 @@ package
 						m.writeUTFBytes(se.data.toString());
 						m.flush();
 					});
-					r.setData(se.data.toString(), g.length, options);
-					r.render(0, stage.stageWidth, stage.stageHeight);
+					r.render(se.data.frames[0], stage.stageWidth, stage.stageHeight, options);
 				});
 				
 				g.setOptions(options);

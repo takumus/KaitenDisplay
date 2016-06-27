@@ -1,6 +1,6 @@
 package com.takumus.kaitenDisplay
 {
-	internal class Frame
+	public class Frame
 	{
 		private var _data:Array;
 		public function Frame(data:Array)
@@ -18,6 +18,10 @@ package com.takumus.kaitenDisplay
 				str += _data[i].join("") + "\n";
 			}
 			return str;
+		}
+		public function get length():int
+		{
+			return _data.length;
 		}
 	}
 }

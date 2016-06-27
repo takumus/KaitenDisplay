@@ -1,5 +1,7 @@
 package
 {
+	import com.takumus.kaitenDisplay.GeneratorOptions;
+	
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -25,59 +27,47 @@ package
 		private function getMessage(event:Event):void
 		{
 			var props:Object = _mainToWorker.receive();
+			var options:GeneratorOptions = new GeneratorOptions();
+			options.setOptions(props.generatorOptions.ledLength, props.generatorOptions.ledArrayLengthCM, props.generatorOptions.centerRadiusCM, props.generatorOptions.resolution, props.generatorOptions.negative);
+			var bitmapData:BitmapData = _renderer.render(props.frame, props.width, props.height, options);
+			bitmapData.copyPixelsToByteArray(bitmapData.rect, _imageBytes);
+			
 			_workerToMain.send({
-				data:"",
-				status:1
+				status:0,
+				image:{
+					width:props.width,
+					height:props.height
+				}
 			});
 		}
 	}
 }
 import com.takumus.kaitenDisplay.GeneratorOptions;
 
+import flash.display.BitmapData;
 import flash.display.Sprite;
 
-class Renderer extends Sprite
+class Renderer
 {
-	private var _frames:Array;
 	private var _centerRadiusRatio:Number;
-	private var _generatorOptions:GeneratorOptions;
+	private var _canvas:Sprite;
+	private var _bitmapData:BitmapData;
 	public function Renderer()
 	{
 		super();
-		_frames = [];
+		_canvas = new Sprite();
 	}
-	public function setData(data:String, frameLength:int, displayOptions:GeneratorOptions):void
+	public function render(frame:Array, width:Number, height:Number, displayOptions:GeneratorOptions):BitmapData
 	{
-		_generatorOptions = displayOptions;
+		if(_bitmapData){
+			_bitmapData.dispose();
+			_bitmapData = null;
+		}
+		_bitmapData = new BitmapData(width, height, false, 0x000000);
 		var lengthCM:Number = displayOptions.ledArrayLengthCM + displayOptions.centerRadiusCM;
 		_centerRadiusRatio = displayOptions.centerRadiusCM / lengthCM;
 		
-		_frames = [];
-		var tmpDatas:Array = data.split("\n");
-		for(var frame:int = 0; frame < frameLength; frame ++){
-			var tmpFrame:Array = []
-			for(var line:int = 0; line < displayOptions.resolution; line ++){
-				var tmpLine:Array = tmpDatas[frame * displayOptions.resolution + line].split("").map(function(v:String, index:int, arr:Array):int{
-					return Number(v);
-				});
-				tmpFrame.push(tmpLine);
-			}
-			_frames.push(tmpFrame);
-		}
-	}
-	public function render(frameStr:String, width:Number, height:Number):void
-	{
-		this.cacheAsBitmap = false;
-		this.graphics.clear();
-		var frame:Array = [];
-		
-		for(var line:int = 0; line < _generatorOptions.resolution; line ++){
-			var tmpLine:Array = tmpDatas[frame * displayOptions.resolution + line].split("").map(function(v:String, index:int, arr:Array):int{
-				return Number(v);
-			});
-			tmpFrame.push(tmpLine);
-		}
-		
+		_canvas.graphics.clear();
 		var size:Number = width < height ? width : height;
 		var cx:Number = width / 2;
 		var cy:Number = height / 2;
@@ -87,6 +77,7 @@ class Renderer extends Sprite
 		var resolution:int = 600;
 		resolution =  resolution < frame.length ? frame.length : resolution;
 		var radianInterval:Number = Math.PI*2/resolution;
+		var dot:BitmapData = new BitmapData(2, 2, false, 0xff0000);
 		for(var radian:Number = 0; radian < Math.PI*2; radian += radianInterval){
 			var id:int = radian / (Math.PI*2) * frame.length;
 			var lines:Array = frame[id];
@@ -98,12 +89,14 @@ class Renderer extends Sprite
 				var nx:Number = cx + Math.cos(tmpRadian + radianInterval) * tmpRadius;
 				var ny:Number = cy + Math.sin(tmpRadian + radianInterval) * tmpRadius;
 				if(lines[l] == 1){
-					this.graphics.lineStyle(3, 0xff0000);
-					this.graphics.moveTo(x, y);
-					this.graphics.lineTo(nx, ny);
+					_canvas.graphics.lineStyle(3, 0xff0000);
+					_canvas.graphics.moveTo(x, y);
+					_canvas.graphics.lineTo(nx, ny);
 				}
 			}
 		}
-		this.cacheAsBitmap = true;
+		_bitmapData.draw(_canvas);
+		_canvas.graphics.clear();
+		return _bitmapData;
 	}
 }
