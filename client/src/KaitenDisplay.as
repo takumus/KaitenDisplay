@@ -1,6 +1,6 @@
 package
 {
-	import com.takumus.kaitenDisplay.DisplayOptions;
+	import com.takumus.kaitenDisplay.GeneratorOptions;
 	import com.takumus.kaitenDisplay.Generator;
 	import com.takumus.kaitenDisplay.GeneratorEvent;
 	import com.takumus.kaitenDisplay.Serial;
@@ -35,7 +35,7 @@ package
 			var r:Renderer = new Renderer();
 			this.addChild(r);
 			
-			var options:DisplayOptions = new DisplayOptions();
+			var options:GeneratorOptions = new GeneratorOptions();
 			options.setOptions(48, 48, 10, line, true);
 			
 			loader.load(new URLRequest("file:///C:/Users/takumus/Desktop/testimage.png?"+new Date().getTime()));

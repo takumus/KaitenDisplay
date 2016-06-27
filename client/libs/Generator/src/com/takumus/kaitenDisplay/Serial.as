@@ -30,7 +30,7 @@ package com.takumus.kaitenDisplay
 		{
 			_bitmapDatas.push(bitmapData);
 		}
-		public function setOptions(options:DisplayOptions):void
+		public function setOptions(options:GeneratorOptions):void
 		{
 			if(_working) {
 				error_working();

@@ -1,6 +1,6 @@
 package renderer
 {
-	import com.takumus.kaitenDisplay.DisplayOptions;
+	import com.takumus.kaitenDisplay.GeneratorOptions;
 	
 	import flash.display.Sprite;
 	
@@ -13,7 +13,7 @@ package renderer
 			super();
 			_frames = [];
 		}
-		public function setData(data:String, frameLength:int, displayOptions:DisplayOptions):void
+		public function setData(data:String, frameLength:int, displayOptions:GeneratorOptions):void
 		{
 			var lengthCM:Number = displayOptions.ledArrayLengthCM + displayOptions.centerRadiusCM;
 			_centerRadiusRatio = displayOptions.centerRadiusCM / lengthCM;
