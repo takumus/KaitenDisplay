@@ -1,12 +1,10 @@
 package
 {
-	import com.takumus.kaitenDisplay.Generator;
-	import com.takumus.kaitenDisplay.GeneratorEvent;
 	import com.takumus.kaitenDisplay.GeneratorOptions;
 	import com.takumus.kaitenDisplay.Renderer;
 	import com.takumus.kaitenDisplay.RendererEvent;
-	import com.takumus.kaitenDisplay.Serial;
-	import com.takumus.kaitenDisplay.SerialEvent;
+	import com.takumus.kaitenDisplay.SerialGenerator;
+	import com.takumus.kaitenDisplay.SerialGeneratorEvent;
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -30,7 +28,7 @@ package
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			
 			//Canvas.init(this.stage, 0x000000);
-			var g:Serial = new Serial();
+			var g:SerialGenerator = new SerialGenerator();
 			
 			var loader:Loader = new Loader();
 			var line:int = 360;
@@ -55,11 +53,11 @@ package
 					g.add(bmd);
 				}
 				var t:int = getTimer();
-				g.addEventListener(SerialEvent.ERROR, function(se:SerialEvent):void
+				g.addEventListener(SerialGeneratorEvent.ERROR, function(se:SerialGeneratorEvent):void
 				{
 					//trace("error");
 				});
-				g.addEventListener(SerialEvent.COMPLETE, function(se:SerialEvent):void
+				g.addEventListener(SerialGeneratorEvent.COMPLETE, function(se:SerialGeneratorEvent):void
 				{
 					//trace(getTimer() - t);
 					var m:Socket = new Socket();

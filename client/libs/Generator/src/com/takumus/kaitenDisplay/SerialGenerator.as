@@ -3,7 +3,7 @@ package com.takumus.kaitenDisplay
 	import flash.display.BitmapData;
 	import flash.events.EventDispatcher;
 
-	public class Serial extends EventDispatcher
+	public class SerialGenerator extends EventDispatcher
 	{
 		private var _generator:Generator;
 		private var _bitmapDatas:Vector.<BitmapData>;
@@ -11,7 +11,7 @@ package com.takumus.kaitenDisplay
 		private var _ledLength:int, _ledArrayLengthCM:Number, _centerRadiusCM:Number, _resolution:uint, _negative:Boolean;
 		private var _data:Vector.<Frame>;
 		private var _working:Boolean;
-		public function Serial()
+		public function SerialGenerator()
 		{
 			_bitmapDatas = new Vector.<BitmapData>();
 			_generator = new Generator();
@@ -58,7 +58,7 @@ package com.takumus.kaitenDisplay
 		{
 			if(_serialIndex > 0) _data.push(e.data);
 			if(_bitmapDatas.length <= _serialIndex) {
-				var me:SerialEvent = new SerialEvent(SerialEvent.COMPLETE);
+				var me:SerialGeneratorEvent = new SerialGeneratorEvent(SerialGeneratorEvent.COMPLETE);
 				me._data = new Timeline(_data);
 				dispatchEvent(me);
 				_working = false;
@@ -79,7 +79,7 @@ package com.takumus.kaitenDisplay
 		private function onError(event:GeneratorEvent):void
 		{
 			_working = false;
-			dispatchEvent(new SerialEvent(SerialEvent.ERROR));
+			dispatchEvent(new SerialGeneratorEvent(SerialGeneratorEvent.ERROR));
 		}
 	}
 }
