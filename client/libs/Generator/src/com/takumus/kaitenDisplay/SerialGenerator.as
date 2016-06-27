@@ -8,7 +8,7 @@ package com.takumus.kaitenDisplay
 		private var _generator:Generator;
 		private var _bitmapDatas:Vector.<BitmapData>;
 		private var _serialIndex:int;
-		private var _ledLength:int, _ledArrayLengthCM:Number, _centerRadiusCM:Number, _resolution:uint, _negative:Boolean;
+		private var _options:GeneratorOptions;
 		private var _data:Vector.<Frame>;
 		private var _working:Boolean;
 		public function SerialGenerator()
@@ -37,11 +37,7 @@ package com.takumus.kaitenDisplay
 				error_working();
 				return;
 			}
-			_ledLength = options.ledLength;
-			_ledArrayLengthCM = options.ledArrayLengthCM;
-			_centerRadiusCM = options.centerRadiusCM;
-			_resolution = options.resolution;
-			_negative = options.negative;
+			_options = options;
 		}
 		public function generate():void
 		{
@@ -64,7 +60,8 @@ package com.takumus.kaitenDisplay
 				_working = false;
 				return;
 			}
-			_generator.generate(_bitmapDatas[_serialIndex], _ledLength, _ledArrayLengthCM, _centerRadiusCM, _resolution, _negative);
+			trace(_serialIndex);
+			_generator.generate(_bitmapDatas[_serialIndex],_options);
 			_serialIndex ++;
 		}
 		public function get length():int
