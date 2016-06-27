@@ -39,7 +39,7 @@ package com.takumus.kaitenDisplay
 			var ge:GeneratorEvent;
 			if(props.status == 0){
 				ge = new GeneratorEvent(GeneratorEvent.COMPLETE);
-				ge._data = props.data;
+				ge._data = new Frame(props.data);
 			}else{
 				ge = new GeneratorEvent(GeneratorEvent.ERROR);
 			}

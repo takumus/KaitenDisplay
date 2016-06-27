@@ -1,12 +1,34 @@
 package
 {
+	import flash.display.BitmapData;
 	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.system.MessageChannel;
+	import flash.system.Worker;
+	import flash.utils.ByteArray;
 	
 	public class RendererWorker extends Sprite
 	{
+		private var _mainToWorker:MessageChannel;
+		private var _workerToMain:MessageChannel;
+		private var _imageBytes:ByteArray;
+		private var _renderer:Renderer;
 		public function RendererWorker()
 		{
+			_mainToWorker = Worker.current.getSharedProperty("mainToWorker");
+			_workerToMain = Worker.current.getSharedProperty("workerToMain");
+			_imageBytes = Worker.current.getSharedProperty("imageBytes");
+			_mainToWorker.addEventListener(Event.CHANNEL_MESSAGE, getMessage);
 			
+			_renderer = new Renderer();
+		}
+		private function getMessage(event:Event):void
+		{
+			var props:Object = _mainToWorker.receive();
+			_workerToMain.send({
+				data:"",
+				status:1
+			});
 		}
 	}
 }
@@ -18,6 +40,7 @@ class Renderer extends Sprite
 {
 	private var _frames:Array;
 	private var _centerRadiusRatio:Number;
+	private var _generatorOptions:GeneratorOptions;
 	public function Renderer()
 	{
 		super();
@@ -25,6 +48,7 @@ class Renderer extends Sprite
 	}
 	public function setData(data:String, frameLength:int, displayOptions:GeneratorOptions):void
 	{
+		_generatorOptions = displayOptions;
 		var lengthCM:Number = displayOptions.ledArrayLengthCM + displayOptions.centerRadiusCM;
 		_centerRadiusRatio = displayOptions.centerRadiusCM / lengthCM;
 		
@@ -41,11 +65,19 @@ class Renderer extends Sprite
 			_frames.push(tmpFrame);
 		}
 	}
-	public function render(frameId:int, width:Number, height:Number):void
+	public function render(frameStr:String, width:Number, height:Number):void
 	{
 		this.cacheAsBitmap = false;
 		this.graphics.clear();
-		var frame:Array = _frames[frameId];
+		var frame:Array = [];
+		
+		for(var line:int = 0; line < _generatorOptions.resolution; line ++){
+			var tmpLine:Array = tmpDatas[frame * displayOptions.resolution + line].split("").map(function(v:String, index:int, arr:Array):int{
+				return Number(v);
+			});
+			tmpFrame.push(tmpLine);
+		}
+		
 		var size:Number = width < height ? width : height;
 		var cx:Number = width / 2;
 		var cy:Number = height / 2;

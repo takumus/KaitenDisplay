@@ -73,10 +73,10 @@ package
 						//フレーム秒
 						m.writeUTFBytes((1000000*2)+"\n");
 						//データ
-						m.writeUTFBytes(se.data);
+						m.writeUTFBytes(se.data.toString());
 						m.flush();
 					});
-					r.setData(se.data, g.length, options);
+					r.setData(se.data.toString(), g.length, options);
 					r.render(0, stage.stageWidth, stage.stageHeight);
 				});
 				

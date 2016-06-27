@@ -9,7 +9,7 @@ package com.takumus.kaitenDisplay
 		private var _bitmapDatas:Vector.<BitmapData>;
 		private var _serialIndex:int;
 		private var _ledLength:int, _ledArrayLengthCM:Number, _centerRadiusCM:Number, _resolution:uint, _negative:Boolean;
-		private var _data:String;
+		private var _data:Vector.<Frame>;
 		private var _working:Boolean;
 		public function Serial()
 		{
@@ -17,6 +17,7 @@ package com.takumus.kaitenDisplay
 			_generator = new Generator();
 			_generator.addEventListener(GeneratorEvent.COMPLETE, generateNext);
 			_generator.addEventListener(GeneratorEvent.ERROR, onError);
+			_data = new Vector.<Frame>();
 		}
 		public function clear():void
 		{
@@ -50,15 +51,15 @@ package com.takumus.kaitenDisplay
 			}
 			_working = true;
 			_serialIndex = 0;
-			_data = "";
+			_data.length = 0;
 			generateNext(null);
 		}
 		private function generateNext(e:GeneratorEvent):void
 		{
-			if(_serialIndex > 0) _data += e.data;
+			if(_serialIndex > 0) _data.push(e.data);
 			if(_bitmapDatas.length <= _serialIndex) {
 				var me:SerialEvent = new SerialEvent(SerialEvent.COMPLETE);
-				me._data = _data;
+				me._data = new Timeline(_data);
 				dispatchEvent(me);
 				_working = false;
 				return;

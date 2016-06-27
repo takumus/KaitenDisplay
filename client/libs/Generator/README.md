@@ -13,7 +13,11 @@
 ### アニメーション生成用のSerialクラスもあるよ
     
     var s:Serial = new Serial();
-    s.setOptions(LED個数, LED達の長さCM, 中心からの長さCM, 1回転を何分割するか);
+    var options:DisplayOptions = new DisplayOptions();
+    options.setOptions(LED個数, LED達の長さCM, 中心からの長さCM, 1回転を何分割するか, 白黒反転);
+    
+    s.setOptions(options);
+    
     s.add(bitmapData1);//1コマ目
     s.add(bitmapData2);//2コマ目
     s.add(bitmapData3);//3コマ目

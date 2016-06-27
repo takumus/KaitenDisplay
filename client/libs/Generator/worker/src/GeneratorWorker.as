@@ -56,7 +56,7 @@ class _Generator
 	public function _Generator()
 	{
 	}
-	public function generate(bmd:BitmapData, ledLength:int, ledArrayLengthCM:Number, centerRadiusCM:Number, resolution:int = 360, negative:Boolean = true):String
+	public function generate(bmd:BitmapData, ledLength:int, ledArrayLengthCM:Number, centerRadiusCM:Number, resolution:int = 360, negative:Boolean = true):Array
 	{
 		var lengthCM:Number = ledArrayLengthCM + centerRadiusCM;
 		_centerRadiusRatio = centerRadiusCM / lengthCM;
@@ -99,7 +99,7 @@ class _Generator
 				childData.push(fill?1:0);
 			}
 		}
-		return convertData(data);
+		return data;
 	}
 	private function convertData(datas:Array):String
 	{
