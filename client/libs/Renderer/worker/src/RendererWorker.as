@@ -30,6 +30,7 @@ package
 			var options:GeneratorOptions = new GeneratorOptions();
 			options.setOptions(props.generatorOptions.ledLength, props.generatorOptions.ledArrayLengthCM, props.generatorOptions.centerRadiusCM, props.generatorOptions.resolution, props.generatorOptions.negative);
 			var bitmapData:BitmapData = _renderer.render(props.frame, props.width, props.height, options);
+			_imageBytes.clear();
 			bitmapData.copyPixelsToByteArray(bitmapData.rect, _imageBytes);
 			
 			_workerToMain.send({

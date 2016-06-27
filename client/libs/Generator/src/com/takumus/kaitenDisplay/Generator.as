@@ -51,6 +51,7 @@ package com.takumus.kaitenDisplay
 			if(_working) return 1;
 			try{
 				_working = true;
+				_imageBytes.clear();
 				bmd.copyPixelsToByteArray(bmd.rect, _imageBytes);
 				_mainToWorker.send({
 					ledLength:ledLength,
@@ -64,6 +65,7 @@ package com.takumus.kaitenDisplay
 					}
 				});
 			}catch(e:Error){
+				trace(e);
 				dispatchEvent(new GeneratorEvent(GeneratorEvent.ERROR));
 			}
 			return 0;
