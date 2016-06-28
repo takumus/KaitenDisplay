@@ -50,9 +50,15 @@ package com.takumus.kaitenDisplay
 				re._data = null;
 				dispatchEvent(re);
 			}
+			_working = false;
 		}
 		public function render(frame:Frame, width:Number, height:Number, generatorOptions:GeneratorOptions):void
 		{
+			if(_working) {
+				dispatchEvent(new RendererEvent(RendererEvent.ERROR));
+				return;
+			}
+			_working = true;
 			_mainToWorker.send({
 				frame:frame.data,
 				width:width,
