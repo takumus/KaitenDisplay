@@ -94,7 +94,13 @@ class _Generator
 				var radius:Number = ledId * ledInterval + beginRadius;
 				var x:Number = Math.cos(rad)* radius + cx;
 				var y:Number = Math.sin(rad)* radius + cy;
-				var fill:Boolean = bmd.getPixel(x, y) == 0;
+				var fill:Boolean;
+				var color:uint = bmd.getPixel(x, y);
+				var red:uint = (color & 0xff0000) >> 16;
+				var green:uint = (color & 0xff00) >> 8;
+				var blue:uint = color & 0xff;
+				fill = (red + green + blue) < 300;
+				
 				fill = negative?!fill:fill;
 				childData.push(fill?1:0);
 			}
