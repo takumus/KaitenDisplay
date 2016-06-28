@@ -1,5 +1,5 @@
 package com.takumus.kaitenDisplay
-{
+{	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
@@ -16,6 +16,20 @@ package com.takumus.kaitenDisplay
 			_socket.addEventListener(Event.CONNECT, connected);
 			_socket.addEventListener(Event.CLOSE, closed);
 			_socket.addEventListener(IOErrorEvent.IO_ERROR, ioError);
+		}
+		public function upload(timeline:Timeline):void
+		{
+			//開始
+			_socket.writeUTFBytes("begin\n");
+			//ライン
+			_socket.writeUTFBytes(timeline.generatorOptions.resolution + "\n");
+			//フレーム
+			_socket.writeUTFBytes(timeline.frames.length + "\n");
+			//フレーム秒
+			_socket.writeUTFBytes(timeline.intervalMicroSec + "\n");
+			//データ
+			_socket.writeUTFBytes(timeline.toString());
+			_socket.flush();
 		}
 		public function connect():void
 		{
