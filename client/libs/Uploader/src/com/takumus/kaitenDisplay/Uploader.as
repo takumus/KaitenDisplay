@@ -12,6 +12,8 @@ package com.takumus.kaitenDisplay
 		private var _port:int;
 		public function Uploader(host:String, port:int)
 		{
+			_host = host;
+			_port = port;
 			_socket = new Socket();
 			_socket.addEventListener(Event.CONNECT, connected);
 			_socket.addEventListener(Event.CLOSE, closed);
@@ -26,6 +28,7 @@ package com.takumus.kaitenDisplay
 			//フレーム
 			_socket.writeUTFBytes(timeline.frames.length + "\n");
 			//フレーム秒
+			trace("frame/sec:"+timeline.intervalMicroSec);
 			_socket.writeUTFBytes(timeline.intervalMicroSec + "\n");
 			//データ
 			_socket.writeUTFBytes(timeline.toString());
@@ -38,7 +41,7 @@ package com.takumus.kaitenDisplay
 		
 		private function connected(e:Event):void
 		{
-			
+			dispatchEvent(new UploaderEvent(UploaderEvent.CONNECT));
 		}
 		private function closed(e:Event):void
 		{
