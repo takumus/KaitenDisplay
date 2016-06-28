@@ -3,8 +3,9 @@ package com.takumus.kaitenDisplay
 	public class GeneratorOptions
 	{
 		private var _ledLength:int, _ledArrayLengthCM:Number, _centerRadiusCM:Number, _resolution:int, _negative:Boolean;
-		public function GeneratorOptions()
+		public function GeneratorOptions(ledLength:int, ledArrayLengthCM:Number, centerRadiusCM:Number, resolution:int, negative:Boolean)
 		{
+			setOptions(ledLength, ledArrayLengthCM, centerRadiusCM, resolution, negative);
 		}
 		public function setOptions(ledLength:int, ledArrayLengthCM:Number, centerRadiusCM:Number, resolution:int, negative:Boolean):void
 		{
