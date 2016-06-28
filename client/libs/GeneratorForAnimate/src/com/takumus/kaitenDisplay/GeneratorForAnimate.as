@@ -39,7 +39,7 @@ package com.takumus.kaitenDisplay
 		{
 			if(e) _frames.push(e.data);
 			if(_frame > _frameLength){
-				var timeline:Timeline = new Timeline(_frames);
+				var timeline:Timeline = new Timeline(_frames, _options);
 				var ge:GeneratorForAnimateEvent = new GeneratorForAnimateEvent(GeneratorForAnimateEvent.COMPLETE);
 				ge._data = timeline;
 				dispatchEvent(ge);
