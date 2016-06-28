@@ -28,7 +28,7 @@ package com.takumus.kaitenDisplay
 		}
 		public function get intervalSec():int
 		{
-			return 1000000 * _intervalSec;
+			return _intervalSec;
 		}
 		public function get frames():Vector.<Frame>
 		{
