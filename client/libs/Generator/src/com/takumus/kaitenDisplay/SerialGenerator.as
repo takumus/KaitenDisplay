@@ -55,7 +55,7 @@ package com.takumus.kaitenDisplay
 			if(_serialIndex > 0) _data.push(e.data);
 			if(_bitmapDatas.length <= _serialIndex) {
 				var me:SerialGeneratorEvent = new SerialGeneratorEvent(SerialGeneratorEvent.COMPLETE);
-				me._data = new Timeline(_data);
+				me._data = new Timeline(_data, _options);
 				dispatchEvent(me);
 				_working = false;
 				return;
