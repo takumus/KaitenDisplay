@@ -5,7 +5,7 @@ package com.takumus.kaitenDisplay
 		private var _frames:Vector.<Frame>;
 		private var _intervalSec:Number;
 		private var _generatorOptions:GeneratorOptions
-		public function Timeline(frames:Vector.<Frame>, generatorOptions:GeneratorOptions, intervalSec:int = 1)
+		public function Timeline(frames:Vector.<Frame>, generatorOptions:GeneratorOptions, intervalSec:Number = 1)
 		{
 			_frames = new Vector.<Frame>();
 			this.intervalSec = intervalSec;
@@ -18,15 +18,15 @@ package com.takumus.kaitenDisplay
 				_frames.push(frames[i]);
 			}
 		}
-		public function set intervalSec(intervalSec:int):void
+		public function set intervalSec(intervalSec:Number):void
 		{
 			_intervalSec = intervalSec;
 		}
-		public function get intervalMicroSec():int
+		internal function get intervalMicroSec():int
 		{
 			return 1000000 * _intervalSec;
 		}
-		public function get intervalSec():int
+		public function get intervalSec():Number
 		{
 			return _intervalSec;
 		}
