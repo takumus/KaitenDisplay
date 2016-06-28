@@ -39,8 +39,7 @@ package
 				addChild(new Bitmap(e.data));
 			});
 			
-			var options:GeneratorOptions = new GeneratorOptions();
-			options.setOptions(48, 48, 10, line, true);
+			var options:GeneratorOptions = new GeneratorOptions(48, 48, 10, line, true);
 			
 			loader.load(new URLRequest("file:///C:/Users/takumus/Desktop/testimage.png?"+new Date().getTime()));
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(e:Event):void{
