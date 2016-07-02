@@ -27,8 +27,8 @@ package
 		private function getMessage(event:Event):void
 		{
 			var props:Object = _mainToWorker.receive();
-			var options:GeneratorOptions = new GeneratorOptions();
-			options.setOptions(props.generatorOptions.ledLength, props.generatorOptions.ledArrayLengthCM, props.generatorOptions.centerRadiusCM, props.generatorOptions.resolution, props.generatorOptions.negative);
+			var options:GeneratorOptions = new GeneratorOptions(props.generatorOptions.ledLength, props.generatorOptions.ledArrayLengthCM, props.generatorOptions.centerRadiusCM, props.generatorOptions.resolution, props.generatorOptions.negative);
+			//options.setOptions(props.generatorOptions.ledLength, props.generatorOptions.ledArrayLengthCM, props.generatorOptions.centerRadiusCM, props.generatorOptions.resolution, props.generatorOptions.negative);
 			var bitmapData:BitmapData = _renderer.render(props.frame, props.width, props.height, options);
 			_imageBytes.clear();
 			bitmapData.copyPixelsToByteArray(bitmapData.rect, _imageBytes);
@@ -84,7 +84,7 @@ class Renderer
 			var lines:Array = frame[id];
 			for(var l:int = 0; l < lines.length; l ++){
 				var tmpRadius:Number = (centerRadius + ledRadius * (l / lines.length));
-				var tmpRadian:Number = radian// - (Math.PI*2/frame.length/2);
+				var tmpRadian:Number = (Math.PI*2 -radian)// - (Math.PI*2/frame.length/2);
 				var x:Number = cx + Math.cos(tmpRadian) * tmpRadius;
 				var y:Number = cy + Math.sin(tmpRadian) * tmpRadius;
 				var nx:Number = cx + Math.cos(tmpRadian + radianInterval) * tmpRadius;
