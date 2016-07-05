@@ -8,6 +8,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include <sys/resource.h>
+#include <softTone.h>
 
 using namespace std;
 
@@ -20,8 +21,14 @@ using namespace std;
 //デバッグLEDピン
 #define DEBUGLEDPIN 10
 
+//デバッグブザーピン
+#define SOUNDPIN 29
+
 //LED個数
 #define LED_LENGTH 48
+
+//デバッグブザー鳴らすか
+#define SOUND 1
 
 //各ステータス
 #define READING   0
@@ -50,6 +57,9 @@ int status = NONE;
 unsigned int rpMicros = 1000000;
 //1ラインの表示時間
 unsigned int lineMicros = 100000;
+
+//ブザー音階
+int sounds[8] = {262, 294, 330, 349, 392, 440, 494, 525};
 
 //排他制御
 pthread_mutex_t mutex;
@@ -156,6 +166,7 @@ void* thread_render(void* args)
 			lineList = frameList[frameListIndex];
 			digitalWrite(DEBUGLEDPIN, lineListIndex == 0);
 			write(lineList[lineListIndex]);
+			if(SOUND) softToneWrite(SOUNDPIN, sounds[(int)((float)lineListIndex/lineListLength*8)]);
 			lineListIndex ++;
 			pthread_mutex_unlock(&mutex);
 		}
@@ -191,6 +202,7 @@ int main(void)
 	pinMode(LATCHPIN, OUTPUT);
 	pinMode(CLOCKPIN, OUTPUT);
 	pinMode(DEBUGLEDPIN, OUTPUT);
+	softToneCreate(SOUNDPIN);
 
 	pthread_mutex_init(&mutex, NULL);
 
