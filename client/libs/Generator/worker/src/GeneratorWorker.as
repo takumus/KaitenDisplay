@@ -28,7 +28,7 @@ package
 			var props:Object = _mainToWorker.receive();
 			if(_bitmapData) _bitmapData.dispose();
 			try{
-				_bitmapData = new BitmapData(props.image.width, props.image.height, false, 0xffffff);
+				_bitmapData = new BitmapData(props.image.width, props.image.height, true, 0xffffffff);
 				_imageBytes.position = 0;
 				_bitmapData.setPixels(_bitmapData.rect, _imageBytes);
 				_workerToMain.send({
@@ -95,11 +95,12 @@ class _Generator
 				var x:Number = Math.cos(Math.PI*2 - rad)* radius + cx;
 				var y:Number = Math.sin(Math.PI*2 - rad)* radius + cy;
 				var fill:Boolean;
-				var color:uint = bmd.getPixel(x, y);
+				var color:uint = bmd.getPixel32(x, y);
+				var alpha:uint = (color & 0xff000000) >> 24;
 				var red:uint = (color & 0xff0000) >> 16;
 				var green:uint = (color & 0xff00) >> 8;
 				var blue:uint = color & 0xff;
-				fill = (red<threshold && green<threshold && blue<threshold);
+				fill = (red<threshold && green<threshold && blue<threshold && 0<alpha);
 				
 				fill = negative?!fill:fill;
 				childData.push(fill?1:0);
