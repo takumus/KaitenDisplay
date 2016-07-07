@@ -1,20 +1,16 @@
 package
 {
-	import com.takumus.kaitenDisplay.GeneratorEvent;
 	import com.takumus.kaitenDisplay.GeneratorOptions;
 	import com.takumus.kaitenDisplay.KDFile;
 	import com.takumus.kaitenDisplay.SerialGenerator;
 	import com.takumus.kaitenDisplay.SerialGeneratorEvent;
 	
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 	import flash.net.FileFilter;
-	import flash.net.FileReference;
 	import flash.net.URLRequest;
 	
 	import org.bytearray.gif.events.GIFPlayerEvent;
@@ -27,7 +23,7 @@ package
 		private var _gifPlayer:GIFPlayer;
 		private var _file:File;
 		private var _generator:SerialGenerator;
-		private var _interval:int = 100;
+		private var _interval:int = 30;
 		public function GifUploader()
 		{
 			var back:Shape = new Shape();
@@ -55,9 +51,6 @@ package
 				for(var f:int = 0; f < fl; f ++){
 					_generator.add(frame.bitmapData);
 				}
-				var b:Bitmap = new Bitmap(frame.bitmapData);
-				this.addChild(b);
-				b.x = i * 40;
 			}
 			_generator.setOptions(new GeneratorOptions(48, 48, 10, 360, false, 150));
 			_generator.generate();
