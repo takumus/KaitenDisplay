@@ -2,18 +2,19 @@ package com.takumus.kaitenDisplay
 {
 	public class GeneratorOptions
 	{
-		private var _ledLength:int, _ledArrayLengthCM:Number, _centerRadiusCM:Number, _resolution:int, _negative:Boolean;
-		public function GeneratorOptions(ledLength:int, ledArrayLengthCM:Number, centerRadiusCM:Number, resolution:int, negative:Boolean)
+		private var _ledLength:int, _ledArrayLengthCM:Number, _centerRadiusCM:Number, _resolution:int, _negative:Boolean, _threshold:uint;
+		public function GeneratorOptions(ledLength:int, ledArrayLengthCM:Number, centerRadiusCM:Number, resolution:int, negative:Boolean, threshold:uint)
 		{
-			setOptions(ledLength, ledArrayLengthCM, centerRadiusCM, resolution, negative);
+			setOptions(ledLength, ledArrayLengthCM, centerRadiusCM, resolution, negative, threshold);
 		}
-		public function setOptions(ledLength:int, ledArrayLengthCM:Number, centerRadiusCM:Number, resolution:int, negative:Boolean):void
+		public function setOptions(ledLength:int, ledArrayLengthCM:Number, centerRadiusCM:Number, resolution:int, negative:Boolean, threshold:uint):void
 		{
 			_ledLength = ledLength;
 			_ledArrayLengthCM = ledArrayLengthCM;
 			_centerRadiusCM = centerRadiusCM;
 			_resolution = resolution;
 			_negative = negative;
+			_threshold = threshold;
 		}
 		public function get ledLength():int
 		{
@@ -34,6 +35,10 @@ package com.takumus.kaitenDisplay
 		public function get negative():Boolean
 		{
 			return _negative;
+		}
+		public function get threshold():uint
+		{
+			return _threshold;
 		}
 	}
 }

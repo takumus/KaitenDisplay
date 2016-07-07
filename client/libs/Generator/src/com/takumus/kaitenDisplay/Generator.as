@@ -59,6 +59,7 @@ package com.takumus.kaitenDisplay
 					centerRadiusCM:options.centerRadiusCM,
 					resolution:options.resolution,
 					negative:options.negative,
+					threshold:options.threshold,
 					image:{
 						width:bmd.width,
 						height:bmd.height

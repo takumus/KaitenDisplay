@@ -21,7 +21,7 @@ package com.takumus.kaitenDisplay
 			var timelineObject:Object = ba.readObject();
 			var frames:Vector.<Frame> = new Vector.<Frame>();
 			var goObject:Object = timelineObject.generatorOptions;
-			var go:GeneratorOptions = new GeneratorOptions(goObject.ledLength, goObject.ledArrayLengthCM, goObject.centerRadiusCM, goObject.resolution, goObject.negative);
+			var go:GeneratorOptions = new GeneratorOptions(goObject.ledLength, goObject.ledArrayLengthCM, goObject.centerRadiusCM, goObject.resolution, goObject.negative, goObject.threshold);
 			for(var i:int = 0; i < timelineObject.frames.length; i ++){
 				var frame:Frame = new Frame(timelineObject.frames[i]);
 				frames.push(frame);
