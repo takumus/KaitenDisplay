@@ -4,6 +4,7 @@ package
 	import com.takumus.kaitenDisplay.KDFile;
 	import com.takumus.kaitenDisplay.SerialGenerator;
 	import com.takumus.kaitenDisplay.SerialGeneratorEvent;
+	import com.takumus.kaitenDisplay.Uploader;
 	
 	import flash.display.Shape;
 	import flash.display.Sprite;
@@ -23,7 +24,8 @@ package
 		private var _gifPlayer:GIFPlayer;
 		private var _file:File;
 		private var _generator:SerialGenerator;
-		private var _interval:int = 30;
+		private var _interval:int = 20;
+		private var _uploader:Uploader;
 		public function GifUploader()
 		{
 			var back:Shape = new Shape();
@@ -38,6 +40,8 @@ package
 			this.stage.addEventListener(MouseEvent.CLICK, open);
 			_generator.addEventListener(SerialGeneratorEvent.COMPLETE, generated);
 			
+			_uploader = new Uploader("raspberrypi.local", 3001);
+			_uploader.connect();
 			this.addChild(back);
 			this.addChild(_gifPlayer);
 		}
@@ -53,13 +57,16 @@ package
 				}
 			}
 			_generator.setOptions(new GeneratorOptions(48, 48, 10, 360, false, 150));
-			_generator.generate();
+			//_generator.generate();
 		}
 		private function generated(event:SerialGeneratorEvent):void
 		{
 			var kdf:KDFile = new KDFile();
 			event.data.intervalSec = _interval*0.001;
+			trace("saving");
 			kdf.save(File.desktopDirectory.resolvePath("aaa.kd"), event.data);
+			trace("ok");
+			//_uploader.upload(event.data);
 		}
 		private function select(event:Event):void
 		{

@@ -28,7 +28,6 @@ package com.takumus.kaitenDisplay
 			//フレーム
 			_socket.writeUTFBytes(timeline.frames.length + "\n");
 			//フレーム秒
-			trace("frame/sec:"+timeline.intervalMicroSec);
 			_socket.writeUTFBytes(timeline.intervalMicroSec + "\n");
 			//データ
 			_socket.writeUTFBytes(timeline.toString());
