@@ -57,7 +57,7 @@ package
 				}
 			}
 			_generator.setOptions(new GeneratorOptions(48, 48, 10, 360, false, 150));
-			//_generator.generate();
+			_generator.generate();
 		}
 		private function generated(event:SerialGeneratorEvent):void
 		{
@@ -66,7 +66,7 @@ package
 			trace("saving");
 			kdf.save(File.desktopDirectory.resolvePath("aaa.kd"), event.data);
 			trace("ok");
-			//_uploader.upload(event.data);
+			_uploader.upload(event.data);
 		}
 		private function select(event:Event):void
 		{

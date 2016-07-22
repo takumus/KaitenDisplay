@@ -28,7 +28,7 @@ using namespace std;
 #define LED_LENGTH 48
 
 //デバッグブザー鳴らすか
-#define SOUND 1
+#define SOUND 0
 
 //各ステータス
 #define READING   0
