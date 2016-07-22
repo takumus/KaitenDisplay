@@ -28,7 +28,7 @@ using namespace std;
 #define LED_LENGTH 48
 
 //デバッグブザー鳴らすか
-#define SOUND 0
+#define SOUND 1
 
 //各ステータス
 #define READING   0
@@ -190,7 +190,25 @@ void* thread_frame(void* args)
 	}
 	return NULL;
 }
-
+void init_music()
+{
+	delay(500);
+	softToneWrite(SOUNDPIN, sounds[0]);
+	delay(500);
+	softToneWrite(SOUNDPIN, sounds[1]);
+	delay(500);
+	softToneWrite(SOUNDPIN, sounds[2]);
+	delay(500);
+	softToneWrite(SOUNDPIN, sounds[3]);
+	delay(500);
+	softToneWrite(SOUNDPIN, sounds[2]);
+	delay(500);
+	softToneWrite(SOUNDPIN, sounds[1]);
+	delay(500);
+	softToneWrite(SOUNDPIN, sounds[0]);
+	delay(500);
+	softToneWrite(SOUNDPIN, 0);
+}
 int main(void)
 {
 	if(wiringPiSetup() == -1){
@@ -203,6 +221,8 @@ int main(void)
 	pinMode(CLOCKPIN, OUTPUT);
 	pinMode(DEBUGLEDPIN, OUTPUT);
 	softToneCreate(SOUNDPIN);
+
+	init_music();
 
 	pthread_mutex_init(&mutex, NULL);
 
