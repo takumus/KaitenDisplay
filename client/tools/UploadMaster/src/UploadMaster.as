@@ -1,6 +1,8 @@
 package
 {
 	import com.takumus.kaitenDisplay.KDFile;
+	import com.takumus.kaitenDisplay.Renderer;
+	import com.takumus.kaitenDisplay.RendererEvent;
 	import com.takumus.kaitenDisplay.Timeline;
 	import com.takumus.kaitenDisplay.Uploader;
 	import com.takumus.kaitenDisplay.UploaderEvent;
@@ -8,13 +10,9 @@ package
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.events.ProgressEvent;
-	import flash.events.ServerSocketConnectEvent;
-	import flash.net.LocalConnection;
-	import flash.net.ServerSocket;
+	import flash.net.dns.AAAARecord;
 	import flash.text.TextField;
-	import flash.utils.ByteArray;
-	import flash.utils.Dictionary;
+	import flash.text.TextFormat;
 	
 	public class UploadMaster extends Sprite
 	{
@@ -22,32 +20,51 @@ package
 		private var _log:TextField;
 		private var _kdf:KDFile;
 		private var _sockets:SocketManager;
-		public static var bitmap:Bitmap = new Bitmap();
+		private var _renderer:Renderer;
+		private var _bitmap:Bitmap;
 		public function UploadMaster()
 		{
 			_uploader = new Uploader("raspberrypi.local", 3001);
 			_uploader.addEventListener(UploaderEvent.CONNECT, connected);
 			_sockets = new SocketManager();
-			
+			_renderer = new Renderer();
+			_sockets.addEventListener(SocketManagerEvent.COMPLETE, receivedFromClient);
+			_sockets.addEventListener(SocketManagerEvent.PROGRESS, receivingFromClient);
+			_renderer.addEventListener(RendererEvent.COMPLETE, completeRendering);
+			_bitmap = new Bitmap();
 			_kdf = new KDFile();
 			
 			_log = new TextField();
+			_log.defaultTextFormat = new TextFormat("Consolas", 18, 0xffffff);
+			this.addChild(_bitmap);
 			this.addChild(_log);
-			this.addChild(bitmap);
 			this.stage.addEventListener(Event.RESIZE, resize);
 			resize(null);
 			log("init");
+		}
+		private function receivedFromClient(event:SocketManagerEvent):void
+		{
+			log("received("+event.client.id+")");
+			trace(event.data.length);
+			var timeline:Timeline = _kdf.loadBinary(event.data);
+			
+			_renderer.render(
+				timeline.frames[0], 
+				stage.stageWidth, stage.stageHeight, 
+				timeline.generatorOptions
+			);
+		}
+		private function receivingFromClient(event:SocketManagerEvent):void
+		{
+			log("receiving("+event.client.id+"):" + event.bytesLoaded + "/" + event.bytesTotal);
 		}
 		private function connected(e:UploaderEvent):void
 		{
 			log("connected");
 		}
-		private function onData(sender:String, byteArray:ByteArray):void
+		private function completeRendering(event:RendererEvent):void
 		{
-			log("data received from " + sender);
-			log(byteArray.length + "bytes");
-			//var tl:Timeline = _kdf.loadBinary(byteArray);
-			//_uploader.upload(tl);
+			_bitmap.bitmapData = event.data;
 		}
 		private function resize(e:Event):void
 		{
