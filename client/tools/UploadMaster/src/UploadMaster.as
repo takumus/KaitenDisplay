@@ -5,6 +5,7 @@ package
 	import com.takumus.kaitenDisplay.Uploader;
 	import com.takumus.kaitenDisplay.UploaderEvent;
 	
+	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.ProgressEvent;
@@ -13,29 +14,26 @@ package
 	import flash.net.ServerSocket;
 	import flash.text.TextField;
 	import flash.utils.ByteArray;
+	import flash.utils.Dictionary;
 	
 	public class UploadMaster extends Sprite
 	{
 		private var _uploader:Uploader;
-		private var _socket:ServerSocket;
 		private var _log:TextField;
 		private var _kdf:KDFile;
+		private var _sockets:SocketManager;
+		public static var bitmap:Bitmap = new Bitmap();
 		public function UploadMaster()
 		{
 			_uploader = new Uploader("raspberrypi.local", 3001);
 			_uploader.addEventListener(UploaderEvent.CONNECT, connected);
-			//_uploader.connect();
+			_sockets = new SocketManager();
 			
-			_socket = new ServerSocket();
-			_socket.addEventListener(Event.ACTIVATE, trace);
-			_socket.addEventListener(ServerSocketConnectEvent.CONNECT, trace);
-			_socket.addEventListener(ProgressEvent.SOCKET_DATA, onProgress);
-			_socket.bind(18760);
-			_socket.listen();
 			_kdf = new KDFile();
 			
 			_log = new TextField();
 			this.addChild(_log);
+			this.addChild(bitmap);
 			this.stage.addEventListener(Event.RESIZE, resize);
 			resize(null);
 			log("init");
@@ -43,10 +41,6 @@ package
 		private function connected(e:UploaderEvent):void
 		{
 			log("connected");
-		}
-		private function onProgress(event:ProgressEvent):void
-		{
-			
 		}
 		private function onData(sender:String, byteArray:ByteArray):void
 		{
