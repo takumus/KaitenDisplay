@@ -25,7 +25,7 @@ package
 		private var _file:File;
 		private var _generator:SerialGenerator;
 		private var _interval:int = 20;
-		private var _uploader:Uploader;
+		private var _uploader:UploadMaster;
 		public function GifUploader()
 		{
 			var back:Shape = new Shape();
@@ -40,8 +40,7 @@ package
 			this.stage.addEventListener(MouseEvent.CLICK, open);
 			_generator.addEventListener(SerialGeneratorEvent.COMPLETE, generated);
 			
-			_uploader = new Uploader("raspberrypi.local", 3001);
-			_uploader.connect();
+			_uploader = new UploadMaster("localhost", 18760);
 			this.addChild(back);
 			this.addChild(_gifPlayer);
 		}
@@ -66,7 +65,7 @@ package
 			trace("saving");
 			kdf.save(File.desktopDirectory.resolvePath("aaa.kd"), event.data);
 			trace("ok");
-			_uploader.upload(event.data);
+			//_uploader.upload(event.data);
 		}
 		private function select(event:Event):void
 		{

@@ -16,7 +16,7 @@ package
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	
-	public class UploadMaster extends Sprite
+	public class UploadMasterProcess extends Sprite
 	{
 		private var _uploader:Uploader;
 		private var _log:TextField;
@@ -24,7 +24,7 @@ package
 		private var _sockets:SocketManager;
 		private var _renderer:Renderer;
 		private var _bitmap:Bitmap;
-		public function UploadMaster()
+		public function UploadMasterProcess()
 		{
 			initSockets();
 			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -46,7 +46,7 @@ package
 		}
 		private function initSockets():void
 		{
-			_sockets = new SocketManager();
+			_sockets = new SocketManager(18760);
 			//ソケットから受信
 			_sockets.addEventListener(SocketManagerEvent.COMPLETE, function(e:SocketManagerEvent):void
 			{

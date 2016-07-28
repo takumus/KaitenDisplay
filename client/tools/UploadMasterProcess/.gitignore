@@ -2,5 +2,5 @@
 .project
 .settings/org.eclipse.core.resources.prefs
 bin-debug/
-src/UploadMaster-app.xml
+src/UploadMasterProcess-app.xml
 libs

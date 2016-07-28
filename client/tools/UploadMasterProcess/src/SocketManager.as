@@ -13,13 +13,13 @@ package
 		private var _serverSocket:ServerSocket;
 		private var _clients:Dictionary;
 		
-		public function SocketManager()
+		public function SocketManager(port:int)
 		{
 			_clients = new Dictionary();
 			_serverSocket = new ServerSocket();
 			_serverSocket.addEventListener(Event.ACTIVATE, trace);
 			_serverSocket.addEventListener(ServerSocketConnectEvent.CONNECT, connected);
-			_serverSocket.bind(18760);
+			_serverSocket.bind(port);
 			_serverSocket.listen();
 		}
 		private function connected(event:ServerSocketConnectEvent):void
