@@ -9,6 +9,8 @@ package
 	
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
+	import flash.display.StageAlign;
+	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.net.dns.AAAARecord;
 	import flash.text.TextField;
@@ -24,12 +26,12 @@ package
 		private var _bitmap:Bitmap;
 		public function UploadMaster()
 		{
+			initSockets();
+			stage.scaleMode = StageScaleMode.NO_SCALE;
+			stage.align = StageAlign.TOP_LEFT;
 			_uploader = new Uploader("raspberrypi.local", 3001);
 			_uploader.addEventListener(UploaderEvent.CONNECT, connected);
-			_sockets = new SocketManager();
 			_renderer = new Renderer();
-			_sockets.addEventListener(SocketManagerEvent.COMPLETE, receivedFromClient);
-			_sockets.addEventListener(SocketManagerEvent.PROGRESS, receivingFromClient);
 			_renderer.addEventListener(RendererEvent.COMPLETE, completeRendering);
 			_bitmap = new Bitmap();
 			_kdf = new KDFile();
@@ -42,21 +44,35 @@ package
 			resize(null);
 			log("init");
 		}
-		private function receivedFromClient(event:SocketManagerEvent):void
+		private function initSockets():void
 		{
-			log("received("+event.client.id+")");
-			trace(event.data.length);
-			var timeline:Timeline = _kdf.loadBinary(event.data);
-			
-			_renderer.render(
-				timeline.frames[0], 
-				stage.stageWidth, stage.stageHeight, 
-				timeline.generatorOptions
-			);
-		}
-		private function receivingFromClient(event:SocketManagerEvent):void
-		{
-			log("receiving("+event.client.id+"):" + event.bytesLoaded + "/" + event.bytesTotal);
+			_sockets = new SocketManager();
+			//ソケットから受信
+			_sockets.addEventListener(SocketManagerEvent.COMPLETE, function(e:SocketManagerEvent):void
+			{
+				log("received ("+e.client.id+") : "+e.bytesTotal+"byte");
+				trace(e.data.length);
+				var timeline:Timeline = _kdf.loadBinary(e.data);
+				
+				_renderer.render(
+					timeline.frames[0], 
+					stage.stageWidth, stage.stageHeight, 
+					timeline.generatorOptions
+				);
+			});
+			//ソケットから受信中
+			_sockets.addEventListener(SocketManagerEvent.PROGRESS, function(e:SocketManagerEvent):void
+			{
+				log("receiving (" + e.client.id+") : " + e.bytesLoaded + "/" + e.bytesTotal + "byte");
+			});
+			_sockets.addEventListener(SocketManagerEvent.CONNECTED, function(e:SocketManagerEvent):void
+			{
+				log("child joined ("+e.client.id+")");
+			});
+			_sockets.addEventListener(SocketManagerEvent.DISCONNECTED, function(e:SocketManagerEvent):void
+			{
+				log("child disconnected ("+e.client.id+")");
+			});
 		}
 		private function connected(e:UploaderEvent):void
 		{
@@ -70,6 +86,9 @@ package
 		{
 			_log.width = stage.stageWidth;
 			_log.height = stage.stageHeight;
+			this.graphics.clear();
+			this.graphics.beginFill(0x000000);
+			this.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
 		}
 		private function log(v:*):void
 		{

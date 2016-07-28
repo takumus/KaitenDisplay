@@ -32,7 +32,7 @@ package
 			client.addEventListener(Event.CLOSE, disconnected);
 			
 			var e:SocketManagerEvent = new SocketManagerEvent(SocketManagerEvent.CONNECTED);
-			e.client = (event.target as Client);
+			e.client = client;
 			dispatchEvent(e);
 		}
 		private function received(event:Event):void
@@ -40,6 +40,7 @@ package
 			var e:SocketManagerEvent = new SocketManagerEvent(SocketManagerEvent.COMPLETE);
 			e.client = (event.target as Client);
 			e.data = e.client.data;
+			e.bytesLoaded = e.bytesTotal = e.client.data.length;
 			dispatchEvent(e);
 		}
 		private function receiving(event:ProgressEvent):void
