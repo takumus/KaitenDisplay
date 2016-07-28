@@ -29,6 +29,11 @@ package
 			_clients[client.id] = client;
 			client.addEventListener(Event.COMPLETE, received);
 			client.addEventListener(ProgressEvent.PROGRESS, receiving);
+			client.addEventListener(Event.CLOSE, disconnected);
+			
+			var e:SocketManagerEvent = new SocketManagerEvent(SocketManagerEvent.CONNECTED);
+			e.client = (event.target as Client);
+			dispatchEvent(e);
 		}
 		private function received(event:Event):void
 		{
@@ -42,6 +47,12 @@ package
 			var e:SocketManagerEvent = new SocketManagerEvent(SocketManagerEvent.PROGRESS);
 			e.bytesLoaded = event.bytesLoaded;
 			e.bytesTotal = event.bytesTotal;
+			e.client = (event.target as Client);
+			dispatchEvent(e);
+		}
+		private function disconnected(event:Event):void
+		{
+			var e:SocketManagerEvent = new SocketManagerEvent(SocketManagerEvent.DISCONNECTED);
 			e.client = (event.target as Client);
 			dispatchEvent(e);
 		}

@@ -20,6 +20,7 @@ package
 			this._socket = socket;
 			_buffer = new ByteArray();
 			socket.addEventListener(ProgressEvent.SOCKET_DATA, progress);
+			socket.addEventListener(Event.CLOSE, disconnected);
 		}
 		private function progress(event:ProgressEvent):void
 		{
@@ -52,6 +53,10 @@ package
 			_buffer.clear();
 			var e:Event = new Event(Event.COMPLETE);
 			dispatchEvent(e);
+		}
+		private function disconnected(event:Event):void
+		{
+			dispatchEvent(new Event(Event.CLOSE));
 		}
 		public function get data():ByteArray
 		{
