@@ -81,9 +81,9 @@ package
 				var sr:Number = (s/60)*Math.PI*2 - Math.PI* 0.5;
 				var sx:Number = Math.cos(sr)*CENTER*0.7 + CENTER;
 				var sy:Number = Math.sin(sr)*CENTER*0.7 + CENTER;
-				//_canvas.graphics.lineStyle(2);
-				//_canvas.graphics.moveTo(CENTER, CENTER);
-				//_canvas.graphics.lineTo(sx, sy);
+				_canvas.graphics.lineStyle(2);
+				_canvas.graphics.moveTo(CENTER, CENTER);
+				_canvas.graphics.lineTo(sx, sy);
 				
 				//hou
 				var hr:Number = (h*60+m)/(60*12)*Math.PI*2 - Math.PI* 0.5;
@@ -99,7 +99,7 @@ package
 			uploader.addEventListener(UploaderEvent.CONNECT, function(e:UploaderEvent):void
 			{
 				trace(11);
-				setInterval(tick, 60000);
+				setInterval(tick, 1000);
 				
 				tick();
 			});

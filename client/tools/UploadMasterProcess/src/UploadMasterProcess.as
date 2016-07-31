@@ -12,7 +12,6 @@ package
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
-	import flash.net.dns.AAAARecord;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	

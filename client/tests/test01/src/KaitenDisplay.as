@@ -76,7 +76,7 @@ package
 			});
 			var n:int = 0;
 			var f:KDFile = new KDFile();
-			var ftl:Timeline = f.load(File.desktopDirectory.resolvePath("aaa.kd"));
+			var ftl:Timeline = f.loadFile(File.desktopDirectory.resolvePath("aaa.kd"));
 			this.stage.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void
 			{
 				//u.upload(ftl);

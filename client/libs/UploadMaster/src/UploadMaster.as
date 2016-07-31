@@ -21,7 +21,7 @@ package
 		{
 			
 		}
-		private function upload(timeline:Timeline):void
+		public function upload(timeline:Timeline):void
 		{
 			var ba:ByteArray = _kdf.generateBinary(timeline);
 			ba.position = 0;
