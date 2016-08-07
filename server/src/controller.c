@@ -28,7 +28,7 @@ using namespace std;
 #define LED_LENGTH 48
 
 //デバッグブザー鳴らすか
-#define SOUND 1
+#define SOUND 0
 
 //各ステータス
 #define READING   0
@@ -192,6 +192,7 @@ void* thread_frame(void* args)
 }
 void init_music()
 {
+	write("111111111111111111111111111111111111111111111111");
 	delay(500);
 	softToneWrite(SOUNDPIN, sounds[0]);
 	delay(500);
@@ -208,6 +209,7 @@ void init_music()
 	softToneWrite(SOUNDPIN, sounds[0]);
 	delay(500);
 	softToneWrite(SOUNDPIN, 0);
+	write("0000000000000000000000000000000000000000000000000");
 }
 int main(void)
 {
