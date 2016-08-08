@@ -23,7 +23,7 @@ package
 		private var _kdf:KDFile;
 		private var _sockets:SocketManager;
 		private var _renderer:Renderer;
-		private var _bitmap:Bitmap;
+		private var _rendererCanvas:Bitmap;
 		private var _connected:Boolean;
 		public function UploadMasterProcess()
 		{
@@ -33,13 +33,9 @@ package
 			initLog();
 			initSocket();
 			initUploader();
-			
-			_renderer = new Renderer();
-			_renderer.addEventListener(RendererEvent.COMPLETE, completeRendering);
-			_bitmap = new Bitmap();
+			initRenderer();
 			_kdf = new KDFile();
 			
-			this.addChild(_bitmap);
 			this.stage.addEventListener(Event.RESIZE, resize);
 			resize(null);
 		}
@@ -65,6 +61,7 @@ package
 					stage.stageWidth, stage.stageHeight, 
 					timeline.generatorOptions
 				);
+				if(_connected) _uploader.upload(timeline);
 			});
 			//ソケットから受信中
 			_sockets.addEventListener(SocketManagerEvent.PROGRESS, function(e:SocketManagerEvent):void
@@ -108,9 +105,15 @@ package
 			
 			connect();
 		}
-		private function completeRendering(event:RendererEvent):void
+		private function initRenderer():void
 		{
-			_bitmap.bitmapData = event.data;
+			_renderer = new Renderer();
+			_renderer.addEventListener(RendererEvent.COMPLETE, function(event:RendererEvent):void
+			{
+				_rendererCanvas.bitmapData = event.data;
+			});
+			_rendererCanvas = new Bitmap();
+			this.addChild(_rendererCanvas);
 		}
 		private function resize(e:Event):void
 		{
