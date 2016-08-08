@@ -14,6 +14,7 @@ package
 	import flash.events.Event;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
+	import flash.utils.setInterval;
 	
 	public class UploadMasterProcess extends Sprite
 	{
@@ -23,27 +24,33 @@ package
 		private var _sockets:SocketManager;
 		private var _renderer:Renderer;
 		private var _bitmap:Bitmap;
+		private var _connected:Boolean;
 		public function UploadMasterProcess()
 		{
-			initSockets();
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
-			_uploader = new Uploader("raspberrypi.local", 3001);
-			_uploader.addEventListener(UploaderEvent.CONNECT, connected);
+			
+			initLog();
+			initSocket();
+			initUploader();
+			
 			_renderer = new Renderer();
 			_renderer.addEventListener(RendererEvent.COMPLETE, completeRendering);
 			_bitmap = new Bitmap();
 			_kdf = new KDFile();
 			
-			_log = new TextField();
-			_log.defaultTextFormat = new TextFormat("Consolas", 18, 0xffffff);
 			this.addChild(_bitmap);
-			this.addChild(_log);
 			this.stage.addEventListener(Event.RESIZE, resize);
 			resize(null);
+		}
+		private function initLog():void
+		{
+			_log = new TextField();
+			_log.defaultTextFormat = new TextFormat("Consolas", 18, 0xffffff);
+			this.addChild(_log);
 			log("init");
 		}
-		private function initSockets():void
+		private function initSocket():void
 		{
 			_sockets = new SocketManager(18760);
 			//ソケットから受信
@@ -73,9 +80,33 @@ package
 				log("child disconnected ("+e.client.id+")");
 			});
 		}
-		private function connected(e:UploaderEvent):void
+		private function initUploader():void
 		{
-			log("connected");
+			_uploader = new Uploader("raspberrypi.local", 3001);
+			
+			var connect:Function = function():void
+			{
+				log("connecting");
+				_uploader.connect();
+			}
+			
+			_uploader.addEventListener(UploaderEvent.CONNECT, function(e:UploaderEvent):void
+			{
+				log("connected");
+				_connected = true;
+			});
+			_uploader.addEventListener(UploaderEvent.CLOSE, function(e:UploaderEvent):void
+			{
+				log("closed");
+				_connected = false;
+			});
+			setInterval(function():void
+			{
+				if(_connected) return;
+				connect();
+			}, 1000*10);
+			
+			connect();
 		}
 		private function completeRendering(event:RendererEvent):void
 		{

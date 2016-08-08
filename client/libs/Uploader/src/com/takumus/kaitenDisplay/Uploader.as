@@ -44,7 +44,7 @@ package com.takumus.kaitenDisplay
 		}
 		private function closed(e:Event):void
 		{
-			
+			dispatchEvent(new UploaderEvent(UploaderEvent.CLOSE));
 		}
 		private function ioError(e:IOErrorEvent):void
 		{
