@@ -4,10 +4,11 @@ package
 	import com.takumus.kaitenDisplay.Timeline;
 	
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.net.Socket;
 	import flash.utils.ByteArray;
 
-	public class UploadMaster
+	public class UploadMaster extends EventDispatcher
 	{
 		private var _socket:Socket;
 		private var _kdf:KDFile;
@@ -19,7 +20,7 @@ package
 		}
 		private function connected(event:Event):void
 		{
-			
+			dispatchEvent(new Event(Event.CONNECT));
 		}
 		public function upload(timeline:Timeline):void
 		{

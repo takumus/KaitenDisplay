@@ -30,10 +30,10 @@ package
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			
+			initRenderer();
 			initLog();
 			initSocket();
 			initUploader();
-			initRenderer();
 			_kdf = new KDFile();
 			
 			this.stage.addEventListener(Event.RESIZE, resize);

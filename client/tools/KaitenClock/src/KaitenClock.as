@@ -15,6 +15,7 @@ package
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
+	import flash.events.Event;
 	import flash.utils.setInterval;
 	
 	public class KaitenClock extends Sprite
@@ -29,8 +30,8 @@ package
 			var renderer:Renderer = new Renderer();
 			var tbmd:BitmapData = new BitmapData(SIZE, SIZE, true, 0x00000000);
 			var bitmap:Bitmap = new Bitmap(tbmd);
-			var uploader:Uploader = new Uploader("raspberrypi.local", 3001);
-			uploader.connect();
+			var uploader:UploadMaster = new UploadMaster("localhost", 18760);
+			//uploader.connect();
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			
@@ -96,7 +97,7 @@ package
 				tbmd.draw(_canvas);
 				g.generate(tbmd, opt);
 			};
-			uploader.addEventListener(UploaderEvent.CONNECT, function(e:UploaderEvent):void
+			uploader.addEventListener(Event.CONNECT, function(e:Event):void
 			{
 				trace(11);
 				setInterval(tick, 1000);
