@@ -24,6 +24,7 @@ package
 		}
 		public function upload(timeline:Timeline):void
 		{
+			trace(timeline.intervalSec)
 			var ba:ByteArray = _kdf.generateBinary(timeline);
 			ba.position = 0;
 			

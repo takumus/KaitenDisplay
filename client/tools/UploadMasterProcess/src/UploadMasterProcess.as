@@ -55,7 +55,8 @@ package
 				log("received ("+e.client.id+") : "+e.bytesTotal+"byte");
 				trace(e.data.length);
 				var timeline:Timeline = _kdf.loadBinary(e.data);
-				
+				log(timeline.intervalSec);
+				log(timeline.intervalMicroSec);
 				_renderer.render(
 					timeline.frames[0], 
 					stage.stageWidth, stage.stageHeight, 

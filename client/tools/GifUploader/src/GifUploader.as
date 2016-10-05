@@ -65,6 +65,7 @@ package
 			trace("saving");
 			kdf.save(File.desktopDirectory.resolvePath("aaa.kd"), event.data);
 			trace("ok");
+			
 			_uploader.upload(event.data);
 		}
 		private function select(event:Event):void

@@ -22,7 +22,7 @@ package com.takumus.kaitenDisplay
 		{
 			_intervalSec = intervalSec;
 		}
-		internal function get intervalMicroSec():int
+		public function get intervalMicroSec():int
 		{
 			return 1000000 * _intervalSec;
 		}

@@ -21,7 +21,10 @@ package com.takumus.kaitenDisplay
 				var frame:Frame = new Frame(timelineObject.frames[i]);
 				frames.push(frame);
 			}
-			return new Timeline(frames, go);
+			var tl:Timeline = new Timeline(frames, go);
+			tl.intervalSec = timelineObject.intervalSec?timelineObject.intervalSec:2;
+			trace(timelineObject.intervalSec);
+			return tl;
 		}
 		public function loadFile(file:File):Timeline
 		{
@@ -51,12 +54,13 @@ package com.takumus.kaitenDisplay
 			var timelineObject:Object = {
 				generatorOptions:{
 					centerRadiusCM	:timeline.generatorOptions.centerRadiusCM,
-						ledArrayLengthCM:timeline.generatorOptions.ledArrayLengthCM,
-						ledLength		:timeline.generatorOptions.ledLength,
-						negative		:timeline.generatorOptions.negative,
-						resolution		:timeline.generatorOptions.resolution
+					ledArrayLengthCM:timeline.generatorOptions.ledArrayLengthCM,
+					ledLength		:timeline.generatorOptions.ledLength,
+					negative		:timeline.generatorOptions.negative,
+					resolution		:timeline.generatorOptions.resolution
 				},
-				frames:[]
+				frames:[],
+				intervalSec     :timeline.intervalSec
 			};
 			for(var i:int = 0; i < timeline.frames.length; i ++){
 				var frame:Frame = timeline.frames[i];
