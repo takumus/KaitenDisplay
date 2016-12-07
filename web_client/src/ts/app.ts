@@ -19,5 +19,4 @@ const resize = ()=> {
 	const height:number = window.innerHeight*2;
 	renderer.resize(width, height);
 }
-
 window.onload = init;
