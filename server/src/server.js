@@ -9,9 +9,6 @@ app.stdout.on('data', (data) => {
 	//console.log(data.toString().split("\n").join(""));
 	process.stdout.write(data.toString());
 });
-app.stderr.on('data', (data) => {
-	//console.log(">" + data.toString());
-});
 app.on('close', (code) => {
 
 });
