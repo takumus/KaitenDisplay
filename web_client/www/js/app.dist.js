@@ -42,8 +42,10 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+	var drawer_1 = __webpack_require__(1);
 	var renderer = PIXI.autoDetectRenderer(800, 800);
 	var stage = new PIXI.Container();
 	var init = function () {
@@ -51,20 +53,50 @@
 	    renderer.view.style.height = "100%";
 	    document.getElementById("content").appendChild(renderer.view);
 	    window.addEventListener("resize", resize);
+	    drawer_1.Drawer.init(stage);
 	    resize();
 	    draw();
 	};
 	var draw = function () {
 	    TWEEN.update();
 	    renderer.render(stage);
+	    drawer_1.Drawer.update();
 	    requestAnimationFrame(draw);
 	};
 	var resize = function () {
 	    var width = window.innerWidth * 2;
 	    var height = window.innerHeight * 2;
 	    renderer.resize(width, height);
+	    drawer_1.Drawer.resize(width, height);
 	};
 	window.onload = init;
+
+
+/***/ },
+/* 1 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var Drawer;
+	(function (Drawer) {
+	    var _stage;
+	    var background = new PIXI.Graphics();
+	    function init(stage) {
+	        _stage = stage;
+	        _stage.addChild(background);
+	    }
+	    Drawer.init = init;
+	    function update() {
+	    }
+	    Drawer.update = update;
+	    function resize(width, height) {
+	        background.clear();
+	        background.beginFill(0xFFFFFF);
+	        background.drawRect(0, 0, width, height);
+	    }
+	    Drawer.resize = resize;
+	})(Drawer || (Drawer = {}));
+	exports.Drawer = Drawer;
 
 
 /***/ }
