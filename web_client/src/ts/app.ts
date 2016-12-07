@@ -1,29 +1,23 @@
-import FileManager from './libs/files/FileManager';
-import {View, ViewManager} from './libs/views/view';
-import {Component, initComponent} from './libs/component/component'
-import Views from './views/views';
-import {Type1} from './types';
-const viewManager:ViewManager = ViewManager.getInstance();
-const init = ()=>{
-	Views.init();
-	viewManager.show("list", false);
-	initComponent("components");
-	const td:Array<Type1> = [];
-	for(let i = 0; i < 10; i ++){
-		td.push({
-			name:i.toString(),
-			data:null
-		})
-	}
-	console.log(Views.views);
-	Views.views.listViewController.setData(td);
-}
+const renderer = PIXI.autoDetectRenderer(800, 800);
+const stage:PIXI.Container = new PIXI.Container();
 
-const update = ()=>{
+const init = ()=> {
+	renderer.view.style.width = "100%";
+	renderer.view.style.height = "100%";
+	document.getElementById("content").appendChild(renderer.view);
+	window.addEventListener("resize", resize);
+	resize();
+	draw();
+}
+const draw = ()=> {
 	TWEEN.update();
-	viewManager.update();
-	requestAnimationFrame(update);
+	renderer.render(stage);
+	requestAnimationFrame(draw);
 }
-update();
+const resize = ()=> {
+	const width:number = window.innerWidth*2;
+	const height:number = window.innerHeight*2;
+	renderer.resize(width, height);
+}
 
-window.addEventListener("load", init);
+window.onload = init;
