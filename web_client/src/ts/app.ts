@@ -1,7 +1,6 @@
-import {Drawer} from './drawer/drawer';
+import {Drawer} from './drawer/main';
 const renderer = PIXI.autoDetectRenderer(800, 800);
 const stage:PIXI.Container = new PIXI.Container();
-
 const init = ()=> {
 	renderer.view.style.width = "100%";
 	renderer.view.style.height = "100%";
