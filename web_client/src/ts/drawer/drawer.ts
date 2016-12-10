@@ -1,30 +1,30 @@
-module DrawerCanvas{
-    export const canvas:PIXI.Graphics = new PIXI.Graphics();
-    export function resize(width:number, height:number):void{
+export default class DrawerCanvas{
+    public canvas:PIXI.Graphics = new PIXI.Graphics();
+    constructor(){
+
+    }
+    public resize(width:number, height:number):void{
         
     }
-    export function init():void{
-        initMouseEvent();
+    public init():void{
+        this.initMouseEvent();
     }
-    function initMouseEvent():void{
-        console.log(1)
+    public initMouseEvent():void{
         //タッチ禁止
-        document.addEventListener("touchstart",(e)=>e.preventDefault());
         let drawing:boolean = false;
-        canvas.lineStyle(10);
-        document.addEventListener("mousedown", (e)=>{
-            drawing = true;
-            canvas.moveTo(e.clientX*2, e.clientY*2);
+        this.canvas.lineStyle(10, 0xff0000);
+        document.addEventListener("touchstart",(e:TouchEvent)=>{
+            e.preventDefault();
+            this.canvas.moveTo(e.touches[0].clientX*2, e.touches[0].clientY*2);
+            console.log(1);
         });
-        document.addEventListener("mousemove", (e)=>{
-            if(!drawing) return;
-            canvas.lineTo(e.clientX*2, e.clientY*2);
+        document.addEventListener("touchmove",(e:TouchEvent)=>{
+            e.preventDefault();
+            this.canvas.lineTo(e.touches[0].clientX*2, e.touches[0].clientY*2);
+            console.log(2);
         });
-        document.addEventListener("mouseup", (e)=>{
-            drawing = false;
+        document.addEventListener("touchend",(e:TouchEvent)=>{
+            e.preventDefault();
         });
     }
-}
-export{
-    DrawerCanvas
 }

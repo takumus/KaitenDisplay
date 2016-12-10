@@ -46,9 +46,10 @@
 
 	"use strict";
 	var main_1 = __webpack_require__(1);
-	var renderer = PIXI.autoDetectRenderer(800, 800);
+	var renderer;
 	var stage = new PIXI.Container();
 	var init = function () {
+	    renderer = new PIXI.CanvasRenderer(800, 800);
 	    renderer.view.style.width = "100%";
 	    renderer.view.style.height = "100%";
 	    document.getElementById("content").appendChild(renderer.view);
@@ -64,8 +65,8 @@
 	    requestAnimationFrame(draw);
 	};
 	var resize = function () {
-	    var width = window.innerWidth * 2;
-	    var height = window.innerHeight * 2;
+	    var width = document.documentElement.clientWidth * 2;
+	    var height = document.documentElement.clientHeight * 2;
 	    renderer.resize(width, height);
 	    main_1.Drawer.resize(width, height);
 	};
@@ -81,12 +82,13 @@
 	var Drawer;
 	(function (Drawer) {
 	    var _stage;
+	    var canvas = new drawer_1.default();
 	    var background = new PIXI.Graphics();
 	    function init(stage) {
 	        _stage = stage;
 	        _stage.addChild(background);
-	        drawer_1.DrawerCanvas.init();
-	        _stage.addChild(drawer_1.DrawerCanvas.canvas);
+	        canvas.init();
+	        _stage.addChild(canvas.canvas);
 	    }
 	    Drawer.init = init;
 	    function update() {
@@ -107,37 +109,38 @@
 /***/ function(module, exports) {
 
 	"use strict";
-	var DrawerCanvas;
-	(function (DrawerCanvas) {
-	    DrawerCanvas.canvas = new PIXI.Graphics();
-	    function resize(width, height) {
+	var DrawerCanvas = (function () {
+	    function DrawerCanvas() {
+	        this.canvas = new PIXI.Graphics();
 	    }
-	    DrawerCanvas.resize = resize;
-	    function init() {
-	        initMouseEvent();
-	    }
-	    DrawerCanvas.init = init;
-	    function initMouseEvent() {
-	        console.log(1);
+	    DrawerCanvas.prototype.resize = function (width, height) {
+	    };
+	    DrawerCanvas.prototype.init = function () {
+	        this.initMouseEvent();
+	    };
+	    DrawerCanvas.prototype.initMouseEvent = function () {
+	        var _this = this;
 	        //タッチ禁止
-	        document.addEventListener("touchstart", function (e) { return e.preventDefault(); });
 	        var drawing = false;
-	        DrawerCanvas.canvas.lineStyle(10);
-	        document.addEventListener("mousedown", function (e) {
-	            drawing = true;
-	            DrawerCanvas.canvas.moveTo(e.clientX * 2, e.clientY * 2);
+	        this.canvas.lineStyle(10, 0xff0000);
+	        document.addEventListener("touchstart", function (e) {
+	            e.preventDefault();
+	            _this.canvas.moveTo(e.touches[0].clientX * 2, e.touches[0].clientY * 2);
+	            console.log(1);
 	        });
-	        document.addEventListener("mousemove", function (e) {
-	            if (!drawing)
-	                return;
-	            DrawerCanvas.canvas.lineTo(e.clientX * 2, e.clientY * 2);
+	        document.addEventListener("touchmove", function (e) {
+	            e.preventDefault();
+	            _this.canvas.lineTo(e.touches[0].clientX * 2, e.touches[0].clientY * 2);
+	            console.log(2);
 	        });
-	        document.addEventListener("mouseup", function (e) {
-	            drawing = false;
+	        document.addEventListener("touchend", function (e) {
+	            e.preventDefault();
 	        });
-	    }
-	})(DrawerCanvas || (DrawerCanvas = {}));
-	exports.DrawerCanvas = DrawerCanvas;
+	    };
+	    return DrawerCanvas;
+	}());
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.default = DrawerCanvas;
 
 
 /***/ }

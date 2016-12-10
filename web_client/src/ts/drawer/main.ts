@@ -1,12 +1,13 @@
-import {DrawerCanvas} from './drawer';
+import DrawerCanvas from './drawer';
 module Drawer{
     let _stage:PIXI.Container;
+    const canvas:DrawerCanvas = new DrawerCanvas();
     const background:PIXI.Graphics = new PIXI.Graphics();
     export function init(stage:PIXI.Container){
         _stage = stage;
         _stage.addChild(background);
-        DrawerCanvas.init();
-        _stage.addChild(DrawerCanvas.canvas);
+        canvas.init();
+        _stage.addChild(canvas.canvas);
     }
     export function update(){
     }
