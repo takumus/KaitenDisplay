@@ -59,8 +59,17 @@
 	    draw();
 	    var webSocket = new WebSocket("ws://takumus.com:3002");
 	    webSocket.onopen = function () {
-	        webSocket.send("hello");
+	        //webSocket.send("hello");
 	    };
+	    document.addEventListener("touchstart", function (e) {
+	        if (e.touches[0].clientY < 100) {
+	            var data = {
+	                data: main_1.Drawer.getData(),
+	                key: ""
+	            };
+	            webSocket.send(JSON.stringify(data));
+	        }
+	    });
 	};
 	var draw = function () {
 	    TWEEN.update();
@@ -104,6 +113,10 @@
 	        background.drawRect(0, 0, width, height);
 	    }
 	    Drawer.resize = resize;
+	    function getData() {
+	        return canvas.getData();
+	    }
+	    Drawer.getData = getData;
 	})(Drawer || (Drawer = {}));
 	exports.Drawer = Drawer;
 
@@ -121,21 +134,34 @@
 	    };
 	    DrawerCanvas.prototype.init = function () {
 	        this.initMouseEvent();
+	        this.reset();
+	    };
+	    DrawerCanvas.prototype.reset = function () {
+	        this.data = "";
+	        this.canvas.clear();
+	    };
+	    DrawerCanvas.prototype.getData = function () {
+	        return this.data;
 	    };
 	    DrawerCanvas.prototype.initMouseEvent = function () {
 	        var _this = this;
 	        //タッチ禁止
 	        var drawing = false;
-	        this.canvas.lineStyle(10, 0xff0000);
 	        document.addEventListener("touchstart", function (e) {
 	            e.preventDefault();
-	            _this.canvas.moveTo(e.touches[0].clientX * 2, e.touches[0].clientY * 2);
-	            console.log(1);
+	            _this.canvas.lineStyle(10, 0xff0000);
+	            var x = e.touches[0].clientX * 2;
+	            var y = e.touches[0].clientY * 2;
+	            _this.canvas.moveTo(x, y);
+	            _this.data += "b,";
+	            _this.data += x + ":" + y + ",";
 	        });
 	        document.addEventListener("touchmove", function (e) {
 	            e.preventDefault();
-	            _this.canvas.lineTo(e.touches[0].clientX * 2, e.touches[0].clientY * 2);
-	            console.log(2);
+	            var x = e.touches[0].clientX * 2;
+	            var y = e.touches[0].clientY * 2;
+	            _this.canvas.lineTo(x, y);
+	            _this.data += x + ":" + y + ",";
 	        });
 	        document.addEventListener("touchend", function (e) {
 	            e.preventDefault();

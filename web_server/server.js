@@ -11,6 +11,7 @@ let primarySocket;
 let key = "";
 
 const server = net.createServer((socket)=>{
+	console.log('uploader connected');
 	socket.on('data', (data)=>{
 	});
 	socket.on('close', ()=>{
@@ -31,7 +32,8 @@ const ws_server = ws.createServer(function (conn) {
 				return;
 			}
 			console.log("send to local server");
-			primarySocket.send(data.data);
+			primarySocket.write(data.data+"\n");
+			//console.log(primarySocket);
 		}catch(e){
 			console.log(e.message);
 		}

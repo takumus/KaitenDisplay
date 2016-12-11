@@ -12,9 +12,17 @@ const init = ()=> {
 	draw();
 	const webSocket = new WebSocket("ws://takumus.com:3002");
 	webSocket.onopen = ()=>{
-		webSocket.send("hello");
+		//webSocket.send("hello");
 	}
-
+	document.addEventListener("touchstart", (e:TouchEvent)=>{
+		if(e.touches[0].clientY < 100){
+			const data = {
+				data:Drawer.getData(),
+				key:""
+			}
+			webSocket.send(JSON.stringify(data));
+		}
+	});
 }
 const draw = ()=> {
 	TWEEN.update();
