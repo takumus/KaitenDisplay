@@ -1,5 +1,16 @@
 package
 {
+	import com.takumus.kaitenDisplay.Frame;
+	import com.takumus.kaitenDisplay.Generator;
+	import com.takumus.kaitenDisplay.GeneratorEvent;
+	import com.takumus.kaitenDisplay.GeneratorOptions;
+	import com.takumus.kaitenDisplay.Renderer;
+	import com.takumus.kaitenDisplay.RendererEvent;
+	import com.takumus.kaitenDisplay.Timeline;
+	import com.takumus.kaitenDisplay.Uploader;
+	
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -11,10 +22,19 @@ package
 	public class WebUploader extends Sprite
 	{
 		private var socket:Socket = new Socket();
+		private var generator:Generator = new Generator();
+		private var opt:GeneratorOptions = new GeneratorOptions(48, 48, 10, 500, false, 150);
+		private var renderer:Renderer = new Renderer();
+		private var uploader:Uploader;
+		private var rendererBitmap:Bitmap;
+		private var canvas:Sprite;
 		public function WebUploader()
 		{
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
+			rendererBitmap = new Bitmap();
+			canvas = new Sprite();
+			this.addChild(rendererBitmap);
 			socket.connect("takumus.com", 3001);
 			socket.addEventListener(Event.CONNECT, function(e:Event):void
 			{
@@ -29,11 +49,16 @@ package
 					data = "";
 				}
 			});
+			renderer.addEventListener(RendererEvent.COMPLETE, function(e:RendererEvent):void
+			{
+				rendererBitmap.bitmapData = e.data;
+			});
+			uploader = new Uploader("raspberrypi.local", 18760);
 		}
 		private function receivedFromClient(dataStr:String):void
 		{
-			this.graphics.clear();
-			this.graphics.lineStyle(10, 0xff0000);
+			canvas.graphics.clear();
+			canvas.graphics.lineStyle(10, 0x000000);
 			var data:Object = JSON.parse(dataStr);
 			var line:String = data.line;
 			var lines:Array = line.split(",");
@@ -43,16 +68,27 @@ package
 				if(l == "b"){
 					p = strToPoint(lines[i+1]);
 					if(!p) continue;
-					this.graphics.moveTo(p.x, p.y);
+					canvas.graphics.moveTo(p.x, p.y);
 					i++;
 					p = null;
 					continue;
 				}
 				p = strToPoint(lines[i]);
 				if(!p) continue;
-				this.graphics.lineTo(p.x, p.y);
+				canvas.graphics.lineTo(p.x, p.y);
 				p = null;
 			}
+			var bmd:BitmapData = new BitmapData(data.width, data.height, false, 0xffffff);
+			bmd.draw(canvas);
+			generator.generate(bmd, opt);
+			generator.addEventListener(GeneratorEvent.COMPLETE, upload);
+		}
+		private function upload(e:GeneratorEvent):void
+		{
+			renderer.render(e.data, stage.stageWidth, stage.stageHeight, opt);
+			var v:Vector.<Frame> = new Vector.<Frame>();
+			v.push(e.data);
+			//uploader.upload(new Timeline(v, opt, 1));
 		}
 		private function strToPoint(line:String):Point{
 			var tmp:Array = line.split(":");

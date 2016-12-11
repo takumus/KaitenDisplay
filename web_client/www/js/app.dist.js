@@ -135,9 +135,24 @@
 	"use strict";
 	var DrawerCanvas = (function () {
 	    function DrawerCanvas() {
-	        this.canvas = new PIXI.Graphics();
+	        this.canvas = new PIXI.Sprite();
+	        this.graphics = new PIXI.Graphics();
+	        this.mask = new PIXI.Graphics();
+	        this.wheel = new PIXI.Graphics();
+	        this.canvas.addChild(this.graphics);
+	        this.canvas.addChild(this.mask);
+	        this.canvas.addChild(this.wheel);
+	        this.graphics.mask = this.mask;
 	    }
 	    DrawerCanvas.prototype.resize = function (width, height) {
+	        this.mask.clear();
+	        this.mask.beginFill(0xFFFFFF);
+	        this.mask.drawCircle(width / 2, width / 2, width / 2);
+	        this.wheel.clear();
+	        this.wheel.lineStyle(10);
+	        this.wheel.drawCircle(width / 2, width / 2, width / 2);
+	        this.wheel.beginFill(0xFFFFFF);
+	        this.wheel.drawCircle(width / 2, width / 2, width * 0.1);
 	    };
 	    DrawerCanvas.prototype.init = function () {
 	        this.initMouseEvent();
@@ -145,7 +160,7 @@
 	    };
 	    DrawerCanvas.prototype.reset = function () {
 	        this.data = "";
-	        this.canvas.clear();
+	        this.graphics.clear();
 	    };
 	    DrawerCanvas.prototype.getData = function () {
 	        return this.data;
@@ -156,10 +171,10 @@
 	        var drawing = false;
 	        document.addEventListener("touchstart", function (e) {
 	            e.preventDefault();
-	            _this.canvas.lineStyle(10, 0xff0000);
+	            _this.graphics.lineStyle(20, 0xff0000);
 	            var x = e.touches[0].clientX * 2;
 	            var y = e.touches[0].clientY * 2;
-	            _this.canvas.moveTo(x, y);
+	            _this.graphics.moveTo(x, y);
 	            _this.data += "b,";
 	            _this.data += x + ":" + y + ",";
 	        });
@@ -167,7 +182,7 @@
 	            e.preventDefault();
 	            var x = e.touches[0].clientX * 2;
 	            var y = e.touches[0].clientY * 2;
-	            _this.canvas.lineTo(x, y);
+	            _this.graphics.lineTo(x, y);
 	            _this.data += x + ":" + y + ",";
 	        });
 	        document.addEventListener("touchend", function (e) {
