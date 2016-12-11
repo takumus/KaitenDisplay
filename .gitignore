@@ -3,3 +3,8 @@ client/tests/test02/test.swf
 client/tests/test02/Untitled-1.fla
 client/tests/test02/Untitled-1.swf
 client/tools/UploadMasterProcess/UploadMasterProcess.air
+client/tools/.settings/
+client/tools/.project
+client/tools/bin-debug/WebUploader-app.xml
+client/tools/bin-debug/
+client/tools/.actionScriptProperties
