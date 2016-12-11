@@ -1,5 +1,0 @@
-# ブラウザからwebsocket.ioでnodejsに送りcからgpio制御
-
-nodeでwebsocket立てて、ブラウザのからつなぐ。  
-nodeはcで書いたgpio制御用アプリをchild_processで起動。  
-ブラウザからnodeに入ってきた文字をchild_processのstdinへ送る。
