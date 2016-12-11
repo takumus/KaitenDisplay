@@ -32,7 +32,7 @@ const ws_server = ws.createServer(function (conn) {
 				return;
 			}
 			console.log("send to local server");
-			primarySocket.write(data.data+"\n");
+			primarySocket.write(JSON.stringify(data.data)+"\n");
 			//console.log(primarySocket);
 		}catch(e){
 			console.log(e.message);

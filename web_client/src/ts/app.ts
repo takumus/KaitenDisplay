@@ -1,6 +1,8 @@
 import {Drawer} from './drawer/main';
 let renderer:PIXI.CanvasRenderer;
 const stage:PIXI.Container = new PIXI.Container();
+let width:number;
+let height:number;
 const init = ()=> {
 	renderer = new PIXI.CanvasRenderer(800, 800);
 	renderer.view.style.width = "100%";
@@ -17,7 +19,11 @@ const init = ()=> {
 	document.addEventListener("touchstart", (e:TouchEvent)=>{
 		if(e.touches[0].clientY < 100){
 			const data = {
-				data:Drawer.getData(),
+				data:{
+					line:Drawer.getData(),
+					width:width,
+					height:height
+				},
 				key:""
 			}
 			webSocket.send(JSON.stringify(data));
@@ -31,8 +37,8 @@ const draw = ()=> {
 	requestAnimationFrame(draw);
 }
 const resize = ()=> {
-	const width:number = document.documentElement.clientWidth*2;
-	const height:number = document.documentElement.clientHeight*2;
+	width = document.documentElement.clientWidth*2;
+	height = document.documentElement.clientHeight*2;
 	renderer.resize(width, height);
 	Drawer.resize(width, height);
 }

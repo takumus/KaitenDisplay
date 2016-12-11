@@ -48,6 +48,8 @@
 	var main_1 = __webpack_require__(1);
 	var renderer;
 	var stage = new PIXI.Container();
+	var width;
+	var height;
 	var init = function () {
 	    renderer = new PIXI.CanvasRenderer(800, 800);
 	    renderer.view.style.width = "100%";
@@ -64,7 +66,11 @@
 	    document.addEventListener("touchstart", function (e) {
 	        if (e.touches[0].clientY < 100) {
 	            var data = {
-	                data: main_1.Drawer.getData(),
+	                data: {
+	                    line: main_1.Drawer.getData(),
+	                    width: width,
+	                    height: height
+	                },
 	                key: ""
 	            };
 	            webSocket.send(JSON.stringify(data));
@@ -78,8 +84,8 @@
 	    requestAnimationFrame(draw);
 	};
 	var resize = function () {
-	    var width = document.documentElement.clientWidth * 2;
-	    var height = document.documentElement.clientHeight * 2;
+	    width = document.documentElement.clientWidth * 2;
+	    height = document.documentElement.clientHeight * 2;
 	    renderer.resize(width, height);
 	    main_1.Drawer.resize(width, height);
 	};
