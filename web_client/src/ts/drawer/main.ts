@@ -15,6 +15,7 @@ module Drawer{
         background.clear();
         background.beginFill(0xFFFFFF);
         background.drawRect(0, 0, width, height);
+        canvas.resize(width, height);
     }
     export function getData():string{
         return canvas.getData();

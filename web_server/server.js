@@ -5,7 +5,6 @@ const WS_PORT = 3002;
 const net = require('net');
 var ws = require("nodejs-websocket")
 
-const clients = {};
 let primarySocket;
 
 let key = "";

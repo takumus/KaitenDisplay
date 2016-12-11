@@ -117,6 +117,7 @@
 	        background.clear();
 	        background.beginFill(0xFFFFFF);
 	        background.drawRect(0, 0, width, height);
+	        canvas.resize(width, height);
 	    }
 	    Drawer.resize = resize;
 	    function getData() {
