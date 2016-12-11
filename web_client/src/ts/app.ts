@@ -10,6 +10,11 @@ const init = ()=> {
 	Drawer.init(stage);
 	resize();
 	draw();
+	const webSocket = new WebSocket("ws://takumus.com:3002");
+	webSocket.onopen = ()=>{
+		webSocket.send("hello");
+	}
+
 }
 const draw = ()=> {
 	TWEEN.update();

@@ -57,6 +57,10 @@
 	    main_1.Drawer.init(stage);
 	    resize();
 	    draw();
+	    var webSocket = new WebSocket("ws://takumus.com:3002");
+	    webSocket.onopen = function () {
+	        webSocket.send("hello");
+	    };
 	};
 	var draw = function () {
 	    TWEEN.update();
