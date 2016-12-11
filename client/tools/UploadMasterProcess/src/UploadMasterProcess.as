@@ -25,6 +25,8 @@ package
 		private var _renderer:Renderer;
 		private var _rendererCanvas:Bitmap;
 		private var _connected:Boolean;
+		private const HOST:String = "raspberrypi.local";
+		private const PORT:uint = 3001;
 		public function UploadMasterProcess()
 		{
 			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -80,11 +82,10 @@ package
 		}
 		private function initUploader():void
 		{
-			_uploader = new Uploader("raspberrypi.local", 3001);
-			
+			_uploader = new Uploader(HOST, PORT);
 			var connect:Function = function():void
 			{
-				log("connecting");
+				log("connecting("+HOST+":"+PORT+")");
 				_uploader.connect();
 			}
 			
