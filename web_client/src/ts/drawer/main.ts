@@ -7,7 +7,7 @@ module Drawer{
         _stage = stage;
         _stage.addChild(background);
         canvas.init();
-        _stage.addChild(canvas.canvas);
+        _stage.addChild(canvas);
     }
     export function update(){
     }

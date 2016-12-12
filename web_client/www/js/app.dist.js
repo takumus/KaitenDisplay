@@ -107,7 +107,7 @@
 	        _stage = stage;
 	        _stage.addChild(background);
 	        canvas.init();
-	        _stage.addChild(canvas.canvas);
+	        _stage.addChild(canvas);
 	    }
 	    Drawer.init = init;
 	    function update() {
@@ -133,37 +133,44 @@
 /***/ function(module, exports) {
 
 	"use strict";
-	var DrawerCanvas = (function () {
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var DrawerCanvas = (function (_super) {
+	    __extends(DrawerCanvas, _super);
 	    function DrawerCanvas() {
-	        this.canvas = new PIXI.Sprite();
-	        this.graphics = new PIXI.Graphics();
-	        this.mask = new PIXI.Graphics();
-	        this.wheel = new PIXI.Graphics();
-	        this.canvas.addChild(this.graphics);
-	        this.canvas.addChild(this.mask);
-	        this.canvas.addChild(this.wheel);
-	        this.graphics.mask = this.mask;
+	        var _this = _super.call(this) || this;
+	        _this._graphics = new PIXI.Graphics();
+	        _this.__mask = new PIXI.Graphics();
+	        _this._wheel = new PIXI.Graphics();
+	        _this.addChild(_this._graphics);
+	        _this.addChild(_this.__mask);
+	        _this.addChild(_this._wheel);
+	        _this._graphics.mask = _this.__mask;
+	        return _this;
 	    }
 	    DrawerCanvas.prototype.resize = function (width, height) {
-	        this.mask.clear();
-	        this.mask.beginFill(0xFFFFFF);
-	        this.mask.drawCircle(width / 2, width / 2, width / 2);
-	        this.wheel.clear();
-	        this.wheel.lineStyle(10);
-	        this.wheel.drawCircle(width / 2, width / 2, width / 2);
-	        this.wheel.beginFill(0xFFFFFF);
-	        this.wheel.drawCircle(width / 2, width / 2, width * 0.1);
+	        this.__mask.clear();
+	        this.__mask.beginFill(0xFFFFFF);
+	        this.__mask.drawCircle(width / 2, width / 2, width / 2);
+	        this._wheel.clear();
+	        this._wheel.lineStyle(10);
+	        this._wheel.drawCircle(width / 2, width / 2, width / 2);
+	        this._wheel.beginFill(0xFFFFFF);
+	        this._wheel.drawCircle(width / 2, width / 2, width * 0.1);
 	    };
 	    DrawerCanvas.prototype.init = function () {
 	        this.initMouseEvent();
 	        this.reset();
 	    };
 	    DrawerCanvas.prototype.reset = function () {
-	        this.data = "";
-	        this.graphics.clear();
+	        this._data = "";
+	        this._graphics.clear();
 	    };
 	    DrawerCanvas.prototype.getData = function () {
-	        return this.data;
+	        return this._data;
 	    };
 	    DrawerCanvas.prototype.initMouseEvent = function () {
 	        var _this = this;
@@ -171,26 +178,26 @@
 	        var drawing = false;
 	        document.addEventListener("touchstart", function (e) {
 	            e.preventDefault();
-	            _this.graphics.lineStyle(20, 0xff0000);
+	            _this._graphics.lineStyle(20, 0xff0000);
 	            var x = e.touches[0].clientX * 2;
 	            var y = e.touches[0].clientY * 2;
-	            _this.graphics.moveTo(x, y);
-	            _this.data += "b,";
-	            _this.data += x + ":" + y + ",";
+	            _this._graphics.moveTo(x, y);
+	            _this._data += "b,";
+	            _this._data += x + ":" + y + ",";
 	        });
 	        document.addEventListener("touchmove", function (e) {
 	            e.preventDefault();
 	            var x = e.touches[0].clientX * 2;
 	            var y = e.touches[0].clientY * 2;
-	            _this.graphics.lineTo(x, y);
-	            _this.data += x + ":" + y + ",";
+	            _this._graphics.lineTo(x, y);
+	            _this._data += x + ":" + y + ",";
 	        });
 	        document.addEventListener("touchend", function (e) {
 	            e.preventDefault();
 	        });
 	    };
 	    return DrawerCanvas;
-	}());
+	}(PIXI.Container));
 	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = DrawerCanvas;
 
