@@ -14,39 +14,39 @@ export default class DrawerCanvas extends PIXI.Container{
     public resize(width:number, height:number):void{
         this.__mask.clear();
         this.__mask.beginFill(0xFFFFFF);
-        const cx = 0;//width / 2;
-        const cy = 0;//width / 2;
-        this._wheel.x = width / 2;
-        this._wheel.y = width / 2;
+        const cx = width / 2;
+        const cy = width / 2;
+        this._wheel.x = cx;
+        this._wheel.y = cy;
         const cr = width*0.05;
         this.__mask.drawCircle(cx, cy, width / 2);
         this._wheel.clear();
         this._wheel.lineStyle(40, 0x000000);
-        this._wheel.drawCircle(cx, cy, width / 2 - 20);
+        this._wheel.drawCircle(0, 0, width / 2 - 20);
         this._wheel.lineStyle(40, 0x333333);
-        this._wheel.drawCircle(cx, cy, width / 2 - 30);
+        this._wheel.drawCircle(0, 0, width / 2 - 30);
         this._wheel.lineStyle(30, 0x999999);
-        this._wheel.drawCircle(cx, cy, width / 2 - 40);
+        this._wheel.drawCircle(0, 0, width / 2 - 40);
         this._wheel.lineStyle(40, 0x999999);
         this._wheel.beginFill(0xcccccc);
-        this._wheel.drawCircle(cx, cy, cr-5);
+        this._wheel.drawCircle(0, 0, cr-5);
         this._wheel.lineStyle();
         this._wheel.beginFill(0x333333);
-        this._wheel.drawCircle(cx, cy, cr * 0.1);
+        this._wheel.drawCircle(0, 0, cr * 0.1);
         
-        this.drawWheel(width / 2 - 40,cr,cx,cy,15);
+        this.drawWheel(width / 2 - 40,cr,15);
 
     }
-    private drawWheel(len:number, cr:number, cx:number, cy:number, count:number):void{
+    private drawWheel(len:number, cr:number, count:number):void{
         const wireLength = count;
         const twist = 0.8;
         this._wheel.endFill();
         for(let i = 0; i < wireLength; i ++){
             const radian = i / wireLength * (Math.PI*2);
-            const bx = Math.cos(radian-twist) * cr + cx;
-            const by = Math.sin(radian-twist) * cr + cy;
-            const ex = Math.cos(radian) * len + cx;
-            const ey = Math.sin(radian) * len + cy;
+            const bx = Math.cos(radian-twist) * cr + 0;
+            const by = Math.sin(radian-twist) * cr + 0;
+            const ex = Math.cos(radian) * len + 0;
+            const ey = Math.sin(radian) * len + 0;
 
             this._wheel.lineStyle();
             this._wheel.beginFill(0x666666);
@@ -61,10 +61,10 @@ export default class DrawerCanvas extends PIXI.Container{
         const diff = (Math.PI*2) * (1/wireLength) / 2;
         for(let i = 0; i < wireLength; i ++){
             const radian = i / wireLength * (Math.PI*2);
-            const bx = Math.cos(radian + twist + diff) * cr + cx;
-            const by = Math.sin(radian + twist + diff) * cr + cy;
-            const ex = Math.cos(radian + diff) * len + cx;
-            const ey = Math.sin(radian + diff) * len + cy;
+            const bx = Math.cos(radian + twist + diff) * cr + 0;
+            const by = Math.sin(radian + twist + diff) * cr + 0;
+            const ex = Math.cos(radian + diff) * len + 0;
+            const ey = Math.sin(radian + diff) * len + 0;
 
             this._wheel.lineStyle();
             this._wheel.beginFill(0x666666);

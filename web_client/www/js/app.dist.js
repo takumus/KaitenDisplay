@@ -153,37 +153,37 @@
 	    DrawerCanvas.prototype.resize = function (width, height) {
 	        this.__mask.clear();
 	        this.__mask.beginFill(0xFFFFFF);
-	        var cx = 0; //width / 2;
-	        var cy = 0; //width / 2;
-	        this._wheel.x = width / 2;
-	        this._wheel.y = width / 2;
+	        var cx = width / 2;
+	        var cy = width / 2;
+	        this._wheel.x = cx;
+	        this._wheel.y = cy;
 	        var cr = width * 0.05;
 	        this.__mask.drawCircle(cx, cy, width / 2);
 	        this._wheel.clear();
 	        this._wheel.lineStyle(40, 0x000000);
-	        this._wheel.drawCircle(cx, cy, width / 2 - 20);
+	        this._wheel.drawCircle(0, 0, width / 2 - 20);
 	        this._wheel.lineStyle(40, 0x333333);
-	        this._wheel.drawCircle(cx, cy, width / 2 - 30);
+	        this._wheel.drawCircle(0, 0, width / 2 - 30);
 	        this._wheel.lineStyle(30, 0x999999);
-	        this._wheel.drawCircle(cx, cy, width / 2 - 40);
+	        this._wheel.drawCircle(0, 0, width / 2 - 40);
 	        this._wheel.lineStyle(40, 0x999999);
 	        this._wheel.beginFill(0xcccccc);
-	        this._wheel.drawCircle(cx, cy, cr - 5);
+	        this._wheel.drawCircle(0, 0, cr - 5);
 	        this._wheel.lineStyle();
 	        this._wheel.beginFill(0x333333);
-	        this._wheel.drawCircle(cx, cy, cr * 0.1);
-	        this.drawWheel(width / 2 - 40, cr, cx, cy, 15);
+	        this._wheel.drawCircle(0, 0, cr * 0.1);
+	        this.drawWheel(width / 2 - 40, cr, 15);
 	    };
-	    DrawerCanvas.prototype.drawWheel = function (len, cr, cx, cy, count) {
+	    DrawerCanvas.prototype.drawWheel = function (len, cr, count) {
 	        var wireLength = count;
 	        var twist = 0.8;
 	        this._wheel.endFill();
 	        for (var i = 0; i < wireLength; i++) {
 	            var radian = i / wireLength * (Math.PI * 2);
-	            var bx = Math.cos(radian - twist) * cr + cx;
-	            var by = Math.sin(radian - twist) * cr + cy;
-	            var ex = Math.cos(radian) * len + cx;
-	            var ey = Math.sin(radian) * len + cy;
+	            var bx = Math.cos(radian - twist) * cr + 0;
+	            var by = Math.sin(radian - twist) * cr + 0;
+	            var ex = Math.cos(radian) * len + 0;
+	            var ey = Math.sin(radian) * len + 0;
 	            this._wheel.lineStyle();
 	            this._wheel.beginFill(0x666666);
 	            this._wheel.drawCircle(bx, by, 5);
@@ -196,10 +196,10 @@
 	        var diff = (Math.PI * 2) * (1 / wireLength) / 2;
 	        for (var i = 0; i < wireLength; i++) {
 	            var radian = i / wireLength * (Math.PI * 2);
-	            var bx = Math.cos(radian + twist + diff) * cr + cx;
-	            var by = Math.sin(radian + twist + diff) * cr + cy;
-	            var ex = Math.cos(radian + diff) * len + cx;
-	            var ey = Math.sin(radian + diff) * len + cy;
+	            var bx = Math.cos(radian + twist + diff) * cr + 0;
+	            var by = Math.sin(radian + twist + diff) * cr + 0;
+	            var ex = Math.cos(radian + diff) * len + 0;
+	            var ey = Math.sin(radian + diff) * len + 0;
 	            this._wheel.lineStyle();
 	            this._wheel.beginFill(0x666666);
 	            this._wheel.drawCircle(bx, by, 5);
