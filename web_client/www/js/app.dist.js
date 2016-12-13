@@ -117,7 +117,7 @@
 	        background.clear();
 	        background.beginFill(0xFFFFFF);
 	        background.drawRect(0, 0, width, height);
-	        canvas.resize(width, height);
+	        canvas.resize(width, width);
 	    }
 	    Drawer.resize = resize;
 	    function getData() {
@@ -141,25 +141,69 @@
 	var DrawerCanvas = (function (_super) {
 	    __extends(DrawerCanvas, _super);
 	    function DrawerCanvas() {
-	        var _this = _super.call(this) || this;
-	        _this._graphics = new PIXI.Graphics();
-	        _this.__mask = new PIXI.Graphics();
-	        _this._wheel = new PIXI.Graphics();
-	        _this.addChild(_this._graphics);
-	        _this.addChild(_this.__mask);
-	        _this.addChild(_this._wheel);
-	        _this._graphics.mask = _this.__mask;
-	        return _this;
+	        _super.call(this);
+	        this._graphics = new PIXI.Graphics();
+	        this.__mask = new PIXI.Graphics();
+	        this._wheel = new PIXI.Graphics();
+	        this.addChild(this._graphics);
+	        this.addChild(this.__mask);
+	        this.addChild(this._wheel);
+	        this._graphics.mask = this.__mask;
 	    }
 	    DrawerCanvas.prototype.resize = function (width, height) {
 	        this.__mask.clear();
 	        this.__mask.beginFill(0xFFFFFF);
-	        this.__mask.drawCircle(width / 2, width / 2, width / 2);
+	        var cx = width / 2;
+	        var cy = width / 2;
+	        var cr = width * 0.05;
+	        this.__mask.drawCircle(cx, cy, width / 2);
 	        this._wheel.clear();
-	        this._wheel.lineStyle(10);
-	        this._wheel.drawCircle(width / 2, width / 2, width / 2);
+	        this._wheel.lineStyle(40, 0x000000);
+	        this._wheel.drawCircle(cx, cy, width / 2 - 20);
+	        this._wheel.lineStyle(40, 0x333333);
+	        this._wheel.drawCircle(cx, cy, width / 2 - 30);
+	        this._wheel.lineStyle(30, 0x999999);
+	        this._wheel.drawCircle(cx, cy, width / 2 - 40);
+	        this._wheel.lineStyle(10, 0x999999);
 	        this._wheel.beginFill(0xFFFFFF);
-	        this._wheel.drawCircle(width / 2, width / 2, width * 0.1);
+	        this._wheel.drawCircle(cx, cy, cr);
+	        this.drawWheel(width / 2 - 40, cr, cx, cy, 15);
+	    };
+	    DrawerCanvas.prototype.drawWheel = function (len, cr, cx, cy, count) {
+	        var wireLength = count;
+	        var twist = 0.8;
+	        this._wheel.endFill();
+	        for (var i = 0; i < wireLength; i++) {
+	            var radian = i / wireLength * (Math.PI * 2);
+	            var bx = Math.cos(radian - twist) * cr + cx;
+	            var by = Math.sin(radian - twist) * cr + cy;
+	            var ex = Math.cos(radian) * len + cx;
+	            var ey = Math.sin(radian) * len + cy;
+	            this._wheel.lineStyle();
+	            this._wheel.beginFill(0x666666);
+	            this._wheel.drawCircle(bx, by, 5);
+	            this._wheel.drawCircle(ex, ey, 5);
+	            this._wheel.endFill();
+	            this._wheel.lineStyle(4, 0xCCCCCC);
+	            this._wheel.moveTo(bx, by);
+	            this._wheel.lineTo(ex, ey);
+	        }
+	        var diff = (Math.PI * 2) * (1 / wireLength) / 2;
+	        for (var i = 0; i < wireLength; i++) {
+	            var radian = i / wireLength * (Math.PI * 2);
+	            var bx = Math.cos(radian + twist + diff) * cr + cx;
+	            var by = Math.sin(radian + twist + diff) * cr + cy;
+	            var ex = Math.cos(radian + diff) * len + cx;
+	            var ey = Math.sin(radian + diff) * len + cy;
+	            this._wheel.lineStyle();
+	            this._wheel.beginFill(0x666666);
+	            this._wheel.drawCircle(bx, by, 5);
+	            this._wheel.drawCircle(ex, ey, 5);
+	            this._wheel.endFill();
+	            this._wheel.lineStyle(4, 0xCCCCCC);
+	            this._wheel.moveTo(bx, by);
+	            this._wheel.lineTo(ex, ey);
+	        }
 	    };
 	    DrawerCanvas.prototype.init = function () {
 	        this.initMouseEvent();
