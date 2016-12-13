@@ -153,8 +153,10 @@
 	    DrawerCanvas.prototype.resize = function (width, height) {
 	        this.__mask.clear();
 	        this.__mask.beginFill(0xFFFFFF);
-	        var cx = width / 2;
-	        var cy = width / 2;
+	        var cx = 0; //width / 2;
+	        var cy = 0; //width / 2;
+	        this._wheel.x = width / 2;
+	        this._wheel.y = width / 2;
 	        var cr = width * 0.05;
 	        this.__mask.drawCircle(cx, cy, width / 2);
 	        this._wheel.clear();
@@ -164,9 +166,12 @@
 	        this._wheel.drawCircle(cx, cy, width / 2 - 30);
 	        this._wheel.lineStyle(30, 0x999999);
 	        this._wheel.drawCircle(cx, cy, width / 2 - 40);
-	        this._wheel.lineStyle(10, 0x999999);
-	        this._wheel.beginFill(0xFFFFFF);
-	        this._wheel.drawCircle(cx, cy, cr);
+	        this._wheel.lineStyle(40, 0x999999);
+	        this._wheel.beginFill(0xcccccc);
+	        this._wheel.drawCircle(cx, cy, cr - 5);
+	        this._wheel.lineStyle();
+	        this._wheel.beginFill(0x333333);
+	        this._wheel.drawCircle(cx, cy, cr * 0.1);
 	        this.drawWheel(width / 2 - 40, cr, cx, cy, 15);
 	    };
 	    DrawerCanvas.prototype.drawWheel = function (len, cr, cx, cy, count) {
