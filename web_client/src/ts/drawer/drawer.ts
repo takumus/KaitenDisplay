@@ -1,3 +1,4 @@
+import {Renderer} from '../renderer';
 export default class DrawerCanvas extends PIXI.Container{
     private _graphics:PIXI.Graphics = new PIXI.Graphics();
     private __mask:PIXI.Graphics = new PIXI.Graphics();
@@ -100,6 +101,7 @@ export default class DrawerCanvas extends PIXI.Container{
             const y = e.touches[0].clientY*2;
             this._graphics.lineTo(x, y);
             this._data += x+":"+y+",";
+            Renderer.update();
         });
         document.addEventListener("touchend",(e:TouchEvent)=>{
             e.preventDefault();

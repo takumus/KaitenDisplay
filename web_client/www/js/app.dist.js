@@ -46,15 +46,13 @@
 
 	"use strict";
 	var main_1 = __webpack_require__(1);
-	var renderer;
+	var renderer_1 = __webpack_require__(3);
 	var stage = new PIXI.Container();
 	var width;
 	var height;
 	var init = function () {
-	    renderer = new PIXI.CanvasRenderer(800, 800);
-	    renderer.view.style.width = "100%";
-	    renderer.view.style.height = "100%";
-	    document.getElementById("content").appendChild(renderer.view);
+	    renderer_1.Renderer.init(stage);
+	    document.getElementById("content").appendChild(renderer_1.Renderer.renderer.view);
 	    window.addEventListener("resize", resize);
 	    main_1.Drawer.init(stage);
 	    resize();
@@ -79,15 +77,15 @@
 	};
 	var draw = function () {
 	    TWEEN.update();
-	    renderer.render(stage);
-	    main_1.Drawer.update();
 	    requestAnimationFrame(draw);
 	};
 	var resize = function () {
 	    width = document.documentElement.clientWidth * 2;
 	    height = document.documentElement.clientHeight * 2;
-	    renderer.resize(width, height);
+	    renderer_1.Renderer.resize(width, height);
 	    main_1.Drawer.resize(width, height);
+	    renderer_1.Renderer.update();
+	    main_1.Drawer.update();
 	};
 	window.onload = init;
 
@@ -130,7 +128,7 @@
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -138,17 +136,19 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var renderer_1 = __webpack_require__(3);
 	var DrawerCanvas = (function (_super) {
 	    __extends(DrawerCanvas, _super);
 	    function DrawerCanvas() {
-	        _super.call(this);
-	        this._graphics = new PIXI.Graphics();
-	        this.__mask = new PIXI.Graphics();
-	        this._wheel = new PIXI.Graphics();
-	        this.addChild(this._graphics);
-	        this.addChild(this.__mask);
-	        this.addChild(this._wheel);
-	        this._graphics.mask = this.__mask;
+	        var _this = _super.call(this) || this;
+	        _this._graphics = new PIXI.Graphics();
+	        _this.__mask = new PIXI.Graphics();
+	        _this._wheel = new PIXI.Graphics();
+	        _this.addChild(_this._graphics);
+	        _this.addChild(_this.__mask);
+	        _this.addChild(_this._wheel);
+	        _this._graphics.mask = _this.__mask;
+	        return _this;
 	    }
 	    DrawerCanvas.prototype.resize = function (width, height) {
 	        this.__mask.clear();
@@ -235,6 +235,7 @@
 	            var y = e.touches[0].clientY * 2;
 	            _this._graphics.lineTo(x, y);
 	            _this._data += x + ":" + y + ",";
+	            renderer_1.Renderer.update();
 	        });
 	        document.addEventListener("touchend", function (e) {
 	            e.preventDefault();
@@ -244,6 +245,31 @@
 	}(PIXI.Container));
 	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = DrawerCanvas;
+
+
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var Renderer;
+	(function (Renderer) {
+	    function init(_stage) {
+	        Renderer.renderer = new PIXI.CanvasRenderer();
+	        Renderer.renderer.view.style.width = "100%";
+	        Renderer.renderer.view.style.height = "100%";
+	        Renderer.stage = _stage;
+	    }
+	    Renderer.init = init;
+	    function resize(width, height) {
+	        Renderer.renderer.resize(width, height);
+	    }
+	    Renderer.resize = resize;
+	    function update() {
+	        Renderer.renderer.render(Renderer.stage);
+	    }
+	    Renderer.update = update;
+	})(Renderer = exports.Renderer || (exports.Renderer = {}));
 
 
 /***/ }
