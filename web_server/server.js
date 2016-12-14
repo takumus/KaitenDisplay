@@ -11,7 +11,17 @@ let key = "";
 
 const server = net.createServer((socket)=>{
 	console.log('uploader connected');
-	socket.on('data', (data)=>{
+	socket.on('data', (dataStr)=>{
+		try{
+			const data = JSON.parse(dataStr);
+			key = data.key;
+			console.log("key updated : " + key);
+			ws_server.connections.forEach((c)=>{
+				c.close();
+			})
+		}catch(e){
+
+		}
 	});
 	socket.on('close', ()=>{
 		console.log('closed socket');

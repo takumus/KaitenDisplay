@@ -38,6 +38,10 @@ package
 			socket.connect("takumus.com", 3001);
 			socket.addEventListener(Event.CONNECT, function(e:Event):void
 			{
+				var data:Object = {
+					key:"aaa"
+				}
+				socket.writeUTFBytes(JSON.stringify(data));
 			});
 			var data:String = "";
 			socket.addEventListener(ProgressEvent.SOCKET_DATA, function(e:ProgressEvent):void
