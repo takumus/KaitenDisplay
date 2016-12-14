@@ -34,7 +34,7 @@ export default class DrawerCanvas extends PIXI.Container{
         this._wheel.beginFill(0x333333);
         this._wheel.drawCircle(0, 0, cr * 0.1);
         
-        this.drawWheel(width / 2 - 40,cr,15);
+        this.drawWheel(width / 2 - 40,cr,16);
 
     }
     private drawWheel(len:number, cr:number, count:number):void{
@@ -84,6 +84,7 @@ export default class DrawerCanvas extends PIXI.Container{
     public reset():void{
         this._data = "";
         this._graphics.clear();
+        Renderer.update();
     }
     public getData():string{
         return this._data;

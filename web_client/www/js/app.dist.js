@@ -59,21 +59,30 @@
 	    draw();
 	    var webSocket = new WebSocket("ws://takumus.com:3002");
 	    webSocket.onopen = function () {
-	        //webSocket.send("hello");
+	        webSocket.send(JSON.stringify({
+	            key: location.hash.substr(1)
+	        }));
+	        console.log(location.hash.substr(1));
 	    };
-	    document.addEventListener("touchstart", function (e) {
-	        if (e.touches[0].clientY < 100) {
-	            var data = {
-	                data: {
-	                    line: main_1.Drawer.getData(),
-	                    width: width,
-	                    height: height
-	                },
-	                key: ""
-	            };
-	            webSocket.send(JSON.stringify(data));
+	    webSocket.onclose = function () {
+	        //alert("接続解除されました。\n遊んでいただきありがとうございます。");
+	    };
+	    main_1.Drawer.onSend = function () {
+	        var data = {
+	            data: {
+	                line: main_1.Drawer.getData(),
+	                width: width,
+	                height: height
+	            },
+	            key: location.hash.substr(1)
+	        };
+	        if (webSocket.readyState != 1) {
+	            alert("外からは送信できません。\nもう一度遊ぶ場合は、\nまたお越しください。");
+	            return;
 	        }
-	    });
+	        webSocket.send(JSON.stringify(data));
+	        alert("タイヤに送信しました");
+	    };
 	};
 	var draw = function () {
 	    TWEEN.update();
@@ -96,16 +105,30 @@
 
 	"use strict";
 	var drawer_1 = __webpack_require__(2);
+	var button_1 = __webpack_require__(4);
 	var Drawer;
 	(function (Drawer) {
 	    var _stage;
 	    var canvas = new drawer_1.default();
 	    var background = new PIXI.Graphics();
+	    var clearButton = new button_1.default("消す", 0x333333, 0xFFFFFF);
+	    var sendButton = new button_1.default("タイヤに送る！", 0xFF6666, 0xFFFFFF);
+	    Drawer.onSend = null;
 	    function init(stage) {
 	        _stage = stage;
 	        _stage.addChild(background);
 	        canvas.init();
 	        _stage.addChild(canvas);
+	        _stage.addChild(sendButton, clearButton);
+	        clearButton.on("tap", function () {
+	            if (window.confirm("全て消しますか?")) {
+	                canvas.reset();
+	            }
+	        });
+	        sendButton.on("tap", function () {
+	            if (Drawer.onSend)
+	                Drawer.onSend();
+	        });
 	    }
 	    Drawer.init = init;
 	    function update() {
@@ -116,6 +139,11 @@
 	        background.beginFill(0xFFFFFF);
 	        background.drawRect(0, 0, width, height);
 	        canvas.resize(width, width);
+	        var bh = (height - width) / 2;
+	        clearButton.resize(width, bh);
+	        sendButton.resize(width, bh);
+	        clearButton.y = width;
+	        sendButton.y = width + bh;
 	    }
 	    Drawer.resize = resize;
 	    function getData() {
@@ -172,7 +200,7 @@
 	        this._wheel.lineStyle();
 	        this._wheel.beginFill(0x333333);
 	        this._wheel.drawCircle(0, 0, cr * 0.1);
-	        this.drawWheel(width / 2 - 40, cr, 15);
+	        this.drawWheel(width / 2 - 40, cr, 16);
 	    };
 	    DrawerCanvas.prototype.drawWheel = function (len, cr, count) {
 	        var wireLength = count;
@@ -217,6 +245,7 @@
 	    DrawerCanvas.prototype.reset = function () {
 	        this._data = "";
 	        this._graphics.clear();
+	        renderer_1.Renderer.update();
 	    };
 	    DrawerCanvas.prototype.getData = function () {
 	        return this._data;
@@ -275,6 +304,46 @@
 	    }
 	    Renderer.update = update;
 	})(Renderer = exports.Renderer || (exports.Renderer = {}));
+
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var Button = (function (_super) {
+	    __extends(Button, _super);
+	    function Button(label, bgColor, labelColor) {
+	        var _this = _super.call(this) || this;
+	        _this.interactive = true;
+	        _this.bgColor = bgColor;
+	        _this.labelColor = labelColor;
+	        _this.background = new PIXI.Graphics();
+	        var labelStyle = new PIXI.TextStyle();
+	        labelStyle.fontSize = 50;
+	        labelStyle.fill = _this.labelColor;
+	        _this.label = new PIXI.Text(label, labelStyle);
+	        _this.label.anchor.set(0.5, 0.5);
+	        _this.addChild(_this.background);
+	        _this.addChild(_this.label);
+	        return _this;
+	    }
+	    Button.prototype.resize = function (width, height) {
+	        this.background.clear();
+	        this.background.beginFill(this.bgColor);
+	        this.background.drawRect(0, 0, width, height);
+	        this.label.x = width / 2;
+	        this.label.y = height / 2;
+	    };
+	    return Button;
+	}(PIXI.Container));
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.default = Button;
 
 
 /***/ }

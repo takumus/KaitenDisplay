@@ -25,7 +25,7 @@ package
 		private var generator:Generator = new Generator();
 		private var opt:GeneratorOptions = new GeneratorOptions(48, 48, 10, 500, false, 150);
 		private var renderer:Renderer = new Renderer();
-		private var uploader:Uploader;
+		private var uploader:UploadMaster;
 		private var rendererBitmap:Bitmap;
 		private var canvas:Sprite;
 		public function WebUploader()
@@ -53,42 +53,47 @@ package
 			{
 				rendererBitmap.bitmapData = e.data;
 			});
-			uploader = new Uploader("raspberrypi.local", 18760);
+			uploader = new UploadMaster("localhost", 18760);
 		}
 		private function receivedFromClient(dataStr:String):void
 		{
-			canvas.graphics.clear();
-			canvas.graphics.lineStyle(10, 0x000000);
-			var data:Object = JSON.parse(dataStr);
-			var line:String = data.line;
-			var lines:Array = line.split(",");
-			for(var i:int = 0; i < lines.length; i ++){
-				var l:String = lines[i];
-				var p:Point;
-				if(l == "b"){
-					p = strToPoint(lines[i+1]);
+			trace(dataStr);
+			try{
+				canvas.graphics.clear();
+				canvas.graphics.lineStyle(20, 0x000000);
+				var data:Object = JSON.parse(dataStr);
+				var line:String = data.line;
+				var lines:Array = line.split(",");
+				for(var i:int = 0; i < lines.length; i ++){
+					var l:String = lines[i];
+					var p:Point;
+					if(l == "b"){
+						p = strToPoint(lines[i+1]);
+						if(!p) continue;
+						canvas.graphics.moveTo(p.x, p.y);
+						i++;
+						p = null;
+						continue;
+					}
+					p = strToPoint(lines[i]);
 					if(!p) continue;
-					canvas.graphics.moveTo(p.x, p.y);
-					i++;
+					canvas.graphics.lineTo(p.x, p.y);
 					p = null;
-					continue;
 				}
-				p = strToPoint(lines[i]);
-				if(!p) continue;
-				canvas.graphics.lineTo(p.x, p.y);
-				p = null;
+				var bmd:BitmapData = new BitmapData(data.width, data.height, false, 0xffffff);
+				bmd.draw(canvas);
+				generator.generate(bmd, opt);
+				generator.addEventListener(GeneratorEvent.COMPLETE, upload);
+			}catch(e:Error){
+				
 			}
-			var bmd:BitmapData = new BitmapData(data.width, data.height, false, 0xffffff);
-			bmd.draw(canvas);
-			generator.generate(bmd, opt);
-			generator.addEventListener(GeneratorEvent.COMPLETE, upload);
 		}
 		private function upload(e:GeneratorEvent):void
 		{
 			renderer.render(e.data, stage.stageWidth, stage.stageHeight, opt);
 			var v:Vector.<Frame> = new Vector.<Frame>();
 			v.push(e.data);
-			//uploader.upload(new Timeline(v, opt, 1));
+			uploader.upload(new Timeline(v, opt, 1));
 		}
 		private function strToPoint(line:String):Point{
 			var tmp:Array = line.split(":");

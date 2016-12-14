@@ -12,21 +12,30 @@ const init = ()=> {
 	draw();
 	const webSocket = new WebSocket("ws://takumus.com:3002");
 	webSocket.onopen = ()=>{
-		//webSocket.send("hello");
+		webSocket.send(JSON.stringify({
+			key:location.hash.substr(1)
+		}));
+		console.log(location.hash.substr(1));
 	}
-	document.addEventListener("touchstart", (e:TouchEvent)=>{
-		if(e.touches[0].clientY < 100){
-			const data = {
-				data:{
-					line:Drawer.getData(),
-					width:width,
-					height:height
-				},
-				key:""
-			}
-			webSocket.send(JSON.stringify(data));
+	webSocket.onclose = ()=>{
+		//alert("接続解除されました。\n遊んでいただきありがとうございます。");
+	}
+	Drawer.onSend = ()=>{
+		const data = {
+			data:{
+				line:Drawer.getData(),
+				width:width,
+				height:height
+			},
+			key:location.hash.substr(1)
 		}
-	});
+		if(webSocket.readyState != 1){
+			alert("外からは送信できません。\nもう一度遊ぶ場合は、\nまたお越しください。");
+			return;
+		}
+		webSocket.send(JSON.stringify(data));
+		alert("タイヤに送信しました");
+	}
 }
 const draw = ()=> {
 	TWEEN.update();
