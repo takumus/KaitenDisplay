@@ -4,6 +4,8 @@ export default class DrawerCanvas extends PIXI.Container{
     private __mask:PIXI.Graphics = new PIXI.Graphics();
     private _wheel:PIXI.Graphics = new PIXI.Graphics();
     private _data:string;
+    public onDraw:()=>void;
+    private _width:number;
     constructor(){
         super();
         this.addChild(this._graphics);
@@ -12,13 +14,14 @@ export default class DrawerCanvas extends PIXI.Container{
         this._graphics.mask = this.__mask;
     }
     public resize(width:number, height:number):void{
+        this._width = width;
         this.__mask.clear();
         this.__mask.beginFill(0xFFFFFF);
         const cx = width / 2;
         const cy = width / 2;
         this._wheel.x = cx;
         this._wheel.y = cy;
-        const cr = width*0.05;
+        const cr = width*0.07;
         this.__mask.drawCircle(cx, cy, width / 2);
         this._wheel.clear();
         this._wheel.lineStyle(40, 0x000000);
@@ -39,7 +42,7 @@ export default class DrawerCanvas extends PIXI.Container{
     }
     private drawWheel(len:number, cr:number, count:number):void{
         const wireLength = count;
-        const twist = 0.8;
+        const twist = 0.5;
         this._wheel.endFill();
         for(let i = 0; i < wireLength; i ++){
             const radian = i / wireLength * (Math.PI*2);
@@ -93,16 +96,19 @@ export default class DrawerCanvas extends PIXI.Container{
         //タッチ禁止
         let drawing:boolean = false;
         document.addEventListener("touchstart",(e:TouchEvent)=>{
-            e.preventDefault();
-            this._graphics.lineStyle(20, 0xff0000);
             const x = e.touches[0].clientX*2;
             const y = e.touches[0].clientY*2;
+            if(x > this._width || y > this._width) return;
+            drawing = true;
+            e.preventDefault();
+            this._graphics.lineStyle(20, 0xff0000);
             this._graphics.moveTo(x, y);
             this._data += "b,";
             this._data += x+":"+y+",";
         });
         document.addEventListener("touchmove",(e:TouchEvent)=>{
             e.preventDefault();
+            if(!drawing) return;
             const x = e.touches[0].clientX*2;
             const y = e.touches[0].clientY*2;
             this._graphics.lineTo(x, y);
@@ -111,6 +117,9 @@ export default class DrawerCanvas extends PIXI.Container{
         });
         document.addEventListener("touchend",(e:TouchEvent)=>{
             e.preventDefault();
+            if(!drawing) return;
+            drawing = false;
+            this.onDraw();
         });
     }
 }

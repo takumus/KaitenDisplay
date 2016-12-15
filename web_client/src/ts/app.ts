@@ -11,7 +11,7 @@ const init = ()=> {
 	resize();
 	draw();
 	
-	Drawer.onSend = ()=>{
+	Drawer.onSend = (byButton:boolean)=>{
 		let key = location.href.split("?")[1];
 		key = key?key:"none";
 		const data = {
@@ -27,7 +27,13 @@ const init = ()=> {
 		//	return;
 		//}
 		//webSocket.send(JSON.stringify(data));
-		post("http://takumus.com/kd/", JSON.stringify(data), "post");
+		const status = post("http://takumus.com/kd/", JSON.stringify(data), "post");
+
+		if(status == 200){
+			if(byButton) alert("タイヤへ送信完了！");
+		}else{
+			alert("残念だ！\nもう送信できない！\n最新のQRコードが必要なんですよ。\nもう一回来てください。");
+		}
 		//alert("タイヤに送信しました");
 	}
 }
@@ -37,11 +43,7 @@ const post = (path, data, method) => {
 	req.setRequestHeader('content-type',
 	'application/x-www-form-urlencoded;charset=UTF-8');
 	req.send('data=' + encodeURIComponent(data));
-	if(req.status == 200){
-		alert("タイヤへ送信完了！");
-	}else{
-		alert("残念だ！\nもう送信できない！\n最新のQRコードが必要なんですよ。\nもう一回来てください。");
-	}
+	return req.status;
 }
 const draw = ()=> {
 	TWEEN.update();

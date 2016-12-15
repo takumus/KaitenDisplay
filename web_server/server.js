@@ -44,13 +44,13 @@ const http_server = http.createServer((req, res)=> {
 				console.log("received from client.");
 				if(data.key != key){
 					console.log("but key is wrong");
-					res.writeHead(403);
+					res.writeHead(403, {'Access-Control-Allow-Origin':'*'});
 					res.end();
 					return;
 				}
 				primarySocket.write(lineData + "\n");
 				console.log("send to local server");
-				res.writeHead(200);
+				res.writeHead(200, {'Access-Control-Allow-Origin':'*'});
 				res.end();
 			}catch(e){
 				console.log(e.message);

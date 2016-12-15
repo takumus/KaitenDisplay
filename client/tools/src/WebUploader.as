@@ -7,8 +7,11 @@ package
 	import com.takumus.kaitenDisplay.GeneratorOptions;
 	import com.takumus.kaitenDisplay.Renderer;
 	import com.takumus.kaitenDisplay.RendererEvent;
+	import com.takumus.kaitenDisplay.SerialGenerator;
+	import com.takumus.kaitenDisplay.SerialGeneratorEvent;
 	import com.takumus.kaitenDisplay.Timeline;
 	import com.takumus.kaitenDisplay.Uploader;
+	import com.takumus.kaitenDisplay.UploaderEvent;
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -26,7 +29,7 @@ package
 	public class WebUploader extends Sprite
 	{
 		private var socket:Socket = new Socket();
-		private var generator:Generator = new Generator();
+		private var generator:SerialGenerator = new SerialGenerator();
 		private var opt:GeneratorOptions = new GeneratorOptions(48, 48, 10, 500, false, 150);
 		private var renderer:Renderer = new Renderer();
 		private var uploader:UploadMaster;
@@ -41,7 +44,7 @@ package
 			canvas = new Sprite();
 			this.addChild(rendererBitmap);
 			socket.connect("takumus.com", 3001);
-			
+			generator.addEventListener(SerialGeneratorEvent.COMPLETE, upload);
 			this.stage.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void{
 				var key:String = SHA1.encrypt(new Date().getTime().toString());
 				var url:String = "http://takumus.com/kdc/?"+key;
@@ -107,18 +110,20 @@ package
 				}
 				var bmd:BitmapData = new BitmapData(data.width, data.height, false, 0xffffff);
 				bmd.draw(canvas);
-				generator.generate(bmd, opt);
-				generator.addEventListener(GeneratorEvent.COMPLETE, upload);
+				generator.clear();
+				generator.setOptions(opt);
+				generator.add(bmd);
+				generator.generate();
 			}catch(e:Error){
 				
 			}
 		}
-		private function upload(e:GeneratorEvent):void
+		private function upload(e:SerialGeneratorEvent):void
 		{
-			renderer.render(e.data, stage.stageWidth, stage.stageHeight, opt);
-			var v:Vector.<Frame> = new Vector.<Frame>();
-			v.push(e.data);
-			uploader.upload(new Timeline(v, opt, 1));
+			e.data.intervalSec = 0.5;
+			renderer.render(e.data.frames[0], stage.stageWidth, stage.stageHeight, opt);
+			uploader.upload(e.data);
+			
 		}
 		private function strToPoint(line:String):Point{
 			var tmp:Array = line.split(":");

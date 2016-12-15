@@ -57,7 +57,7 @@
 	    main_1.Drawer.init(stage);
 	    resize();
 	    draw();
-	    main_1.Drawer.onSend = function () {
+	    main_1.Drawer.onSend = function (byButton) {
 	        var key = location.href.split("?")[1];
 	        key = key ? key : "none";
 	        var data = {
@@ -73,7 +73,14 @@
 	        //	return;
 	        //}
 	        //webSocket.send(JSON.stringify(data));
-	        post("http://takumus.com/kd/", JSON.stringify(data), "post");
+	        var status = post("http://takumus.com/kd/", JSON.stringify(data), "post");
+	        if (status == 200) {
+	            if (byButton)
+	                alert("タイヤへ送信完了！");
+	        }
+	        else {
+	            alert("残念だ！\nもう送信できない！\n最新のQRコードが必要なんですよ。\nもう一回来てください。");
+	        }
 	        //alert("タイヤに送信しました");
 	    };
 	};
@@ -82,12 +89,7 @@
 	    req.open(method, path, false);
 	    req.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
 	    req.send('data=' + encodeURIComponent(data));
-	    if (req.status == 200) {
-	        alert("タイヤへ送信完了！");
-	    }
-	    else {
-	        alert("残念だ！\nもう送信できない！\n最新のQRコードが必要なんですよ。\nもう一回来てください。");
-	    }
+	    return req.status;
 	};
 	var draw = function () {
 	    TWEEN.update();
@@ -126,14 +128,18 @@
 	        _stage.addChild(canvas);
 	        _stage.addChild(sendButton, clearButton);
 	        clearButton.on("tap", function () {
-	            if (window.confirm("全て消しますか?")) {
-	                canvas.reset();
-	            }
+	            //if(window.confirm("全て消しますか?")){
+	            canvas.reset();
+	            //}
 	        });
 	        sendButton.on("tap", function () {
 	            if (Drawer.onSend)
-	                Drawer.onSend();
+	                Drawer.onSend(true);
 	        });
+	        canvas.onDraw = function () {
+	            if (Drawer.onSend)
+	                Drawer.onSend(false);
+	        };
 	    }
 	    Drawer.init = init;
 	    function update() {
@@ -184,13 +190,14 @@
 	        return _this;
 	    }
 	    DrawerCanvas.prototype.resize = function (width, height) {
+	        this._width = width;
 	        this.__mask.clear();
 	        this.__mask.beginFill(0xFFFFFF);
 	        var cx = width / 2;
 	        var cy = width / 2;
 	        this._wheel.x = cx;
 	        this._wheel.y = cy;
-	        var cr = width * 0.05;
+	        var cr = width * 0.07;
 	        this.__mask.drawCircle(cx, cy, width / 2);
 	        this._wheel.clear();
 	        this._wheel.lineStyle(40, 0x000000);
@@ -209,7 +216,7 @@
 	    };
 	    DrawerCanvas.prototype.drawWheel = function (len, cr, count) {
 	        var wireLength = count;
-	        var twist = 0.8;
+	        var twist = 0.5;
 	        this._wheel.endFill();
 	        for (var i = 0; i < wireLength; i++) {
 	            var radian = i / wireLength * (Math.PI * 2);
@@ -260,16 +267,21 @@
 	        //タッチ禁止
 	        var drawing = false;
 	        document.addEventListener("touchstart", function (e) {
-	            e.preventDefault();
-	            _this._graphics.lineStyle(20, 0xff0000);
 	            var x = e.touches[0].clientX * 2;
 	            var y = e.touches[0].clientY * 2;
+	            if (x > _this._width || y > _this._width)
+	                return;
+	            drawing = true;
+	            e.preventDefault();
+	            _this._graphics.lineStyle(20, 0xff0000);
 	            _this._graphics.moveTo(x, y);
 	            _this._data += "b,";
 	            _this._data += x + ":" + y + ",";
 	        });
 	        document.addEventListener("touchmove", function (e) {
 	            e.preventDefault();
+	            if (!drawing)
+	                return;
 	            var x = e.touches[0].clientX * 2;
 	            var y = e.touches[0].clientY * 2;
 	            _this._graphics.lineTo(x, y);
@@ -278,6 +290,10 @@
 	        });
 	        document.addEventListener("touchend", function (e) {
 	            e.preventDefault();
+	            if (!drawing)
+	                return;
+	            drawing = false;
+	            _this.onDraw();
 	        });
 	    };
 	    return DrawerCanvas;
