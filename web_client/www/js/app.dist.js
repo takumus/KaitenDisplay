@@ -57,32 +57,29 @@
 	    main_1.Drawer.init(stage);
 	    resize();
 	    draw();
-	    var webSocket = new WebSocket("ws://takumus.com:3002");
-	    webSocket.onopen = function () {
-	        webSocket.send(JSON.stringify({
-	            key: location.hash.substr(1)
-	        }));
-	        console.log(location.hash.substr(1));
-	    };
-	    webSocket.onclose = function () {
-	        //alert("接続解除されました。\n遊んでいただきありがとうございます。");
-	    };
 	    main_1.Drawer.onSend = function () {
 	        var data = {
-	            data: {
+	            data: JSON.stringify({
 	                line: main_1.Drawer.getData(),
 	                width: width,
 	                height: height
-	            },
+	            }),
 	            key: location.hash.substr(1)
 	        };
-	        if (webSocket.readyState != 1) {
-	            alert("外からは送信できません。\nもう一度遊ぶ場合は、\nまたお越しください。");
-	            return;
-	        }
-	        webSocket.send(JSON.stringify(data));
+	        //if(webSocket.readyState != 1){
+	        //	alert("外からは送信できません。\nもう一度遊ぶ場合は、\nまたお越しください。");
+	        //	return;
+	        //}
+	        //webSocket.send(JSON.stringify(data));
+	        post("http://takumus.com:3002", JSON.stringify(data), "post");
 	        alert("タイヤに送信しました");
 	    };
+	};
+	var post = function (path, data, method) {
+	    var req = new XMLHttpRequest();
+	    req.open(method, path, true);
+	    req.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
+	    req.send('data=' + encodeURIComponent(data));
 	};
 	var draw = function () {
 	    TWEEN.update();

@@ -10,32 +10,31 @@ const init = ()=> {
 	Drawer.init(stage);
 	resize();
 	draw();
-	const webSocket = new WebSocket("ws://takumus.com:3002");
-	webSocket.onopen = ()=>{
-		webSocket.send(JSON.stringify({
-			key:location.hash.substr(1)
-		}));
-		console.log(location.hash.substr(1));
-	}
-	webSocket.onclose = ()=>{
-		//alert("接続解除されました。\n遊んでいただきありがとうございます。");
-	}
+	
 	Drawer.onSend = ()=>{
 		const data = {
-			data:{
+			data:JSON.stringify({
 				line:Drawer.getData(),
 				width:width,
 				height:height
-			},
+			}),
 			key:location.hash.substr(1)
 		}
-		if(webSocket.readyState != 1){
-			alert("外からは送信できません。\nもう一度遊ぶ場合は、\nまたお越しください。");
-			return;
-		}
-		webSocket.send(JSON.stringify(data));
+		//if(webSocket.readyState != 1){
+		//	alert("外からは送信できません。\nもう一度遊ぶ場合は、\nまたお越しください。");
+		//	return;
+		//}
+		//webSocket.send(JSON.stringify(data));
+		post("http://takumus.com:3002", JSON.stringify(data), "post");
 		alert("タイヤに送信しました");
 	}
+}
+const post = (path, data, method) => {
+    var req = new XMLHttpRequest();
+	req.open(method, path, true);
+	req.setRequestHeader('content-type',
+	'application/x-www-form-urlencoded;charset=UTF-8');
+	req.send('data=' + encodeURIComponent(data));
 }
 const draw = ()=> {
 	TWEEN.update();
