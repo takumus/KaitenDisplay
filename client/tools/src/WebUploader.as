@@ -1,5 +1,6 @@
 package
 {
+	import com.gsolo.encryption.SHA1;
 	import com.takumus.kaitenDisplay.Frame;
 	import com.takumus.kaitenDisplay.Generator;
 	import com.takumus.kaitenDisplay.GeneratorEvent;
@@ -15,9 +16,12 @@ package
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.events.ProgressEvent;
 	import flash.geom.Point;
 	import flash.net.Socket;
+	
+	import org.qrcode.QRCode;
 	
 	public class WebUploader extends Sprite
 	{
@@ -28,6 +32,7 @@ package
 		private var uploader:UploadMaster;
 		private var rendererBitmap:Bitmap;
 		private var canvas:Sprite;
+		private var qrcode:QRCode = new QRCode();
 		public function WebUploader()
 		{
 			stage.align = StageAlign.TOP_LEFT;
@@ -36,12 +41,28 @@ package
 			canvas = new Sprite();
 			this.addChild(rendererBitmap);
 			socket.connect("takumus.com", 3001);
+			
+			this.stage.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void{
+				var key:String = SHA1.encrypt(new Date().getTime().toString());
+				var url:String = "http://takumus.com/kdc/?"+key;
+				qrcode.encode(url);
+				try{
+					socket.writeUTFBytes(JSON.stringify({
+						key:key
+					}) + "\n");
+					socket.flush();
+				}catch(e:Error){
+					trace(e);
+				}
+				rendererBitmap.bitmapData = qrcode.bitmapData;
+				rendererBitmap.smoothing = false;
+				rendererBitmap.width = rendererBitmap.height = stage.stageWidth * 0.6;
+				rendererBitmap.x = stage.stageWidth / 2 - rendererBitmap.width / 2;
+				rendererBitmap.y = stage.stageHeight / 2 - rendererBitmap.height / 2;
+			});
 			socket.addEventListener(Event.CONNECT, function(e:Event):void
 			{
-				var data:Object = {
-					key:"aaa"
-				}
-				socket.writeUTFBytes(JSON.stringify(data));
+				
 			});
 			var data:String = "";
 			socket.addEventListener(ProgressEvent.SOCKET_DATA, function(e:ProgressEvent):void
@@ -55,7 +76,7 @@ package
 			});
 			renderer.addEventListener(RendererEvent.COMPLETE, function(e:RendererEvent):void
 			{
-				rendererBitmap.bitmapData = e.data;
+				//rendererBitmap.bitmapData = e.data;
 			});
 			uploader = new UploadMaster("localhost", 18760);
 		}

@@ -16,16 +16,16 @@ const server = net.createServer((socket)=>{
 			const data = JSON.parse(dataStr);
 			key = data.key;
 			console.log("key updated : " + key);
-			ws_server.connections.forEach((c)=>{
-				c.close();
-			})
 		}catch(e){
-
+			console.log(e);
 		}
 	});
 	socket.on('close', ()=>{
 		console.log('closed socket');
 	});
+	socket.on('error', (err)=>{
+		console.log(err);
+	})
 	primarySocket = socket;
 }).listen(SOCKET_PORT);
 
@@ -42,9 +42,16 @@ const http_server = http.createServer((req, res)=> {
 				const data = JSON.parse(querystring.parse(tmpData).data);
 				const lineData = data.data;
 				console.log("received from client.");
+				if(data.key != key){
+					console.log("but key is wrong");
+					res.writeHead(403);
+					res.end();
+					return;
+				}
 				primarySocket.write(lineData + "\n");
 				console.log("send to local server");
-				res.end(tmpData);
+				res.writeHead(200);
+				res.end();
 			}catch(e){
 				console.log(e.message);
 			}

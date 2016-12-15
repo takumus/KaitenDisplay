@@ -12,29 +12,36 @@ const init = ()=> {
 	draw();
 	
 	Drawer.onSend = ()=>{
+		let key = location.href.split("?")[1];
+		key = key?key:"none";
 		const data = {
 			data:JSON.stringify({
 				line:Drawer.getData(),
 				width:width,
 				height:height
 			}),
-			key:location.hash.substr(1)
+			key:key
 		}
 		//if(webSocket.readyState != 1){
 		//	alert("外からは送信できません。\nもう一度遊ぶ場合は、\nまたお越しください。");
 		//	return;
 		//}
 		//webSocket.send(JSON.stringify(data));
-		post("http://takumus.com:3002", JSON.stringify(data), "post");
-		alert("タイヤに送信しました");
+		post("http://takumus.com/kd/", JSON.stringify(data), "post");
+		//alert("タイヤに送信しました");
 	}
 }
 const post = (path, data, method) => {
     var req = new XMLHttpRequest();
-	req.open(method, path, true);
+	req.open(method, path, false);
 	req.setRequestHeader('content-type',
 	'application/x-www-form-urlencoded;charset=UTF-8');
 	req.send('data=' + encodeURIComponent(data));
+	if(req.status == 200){
+		alert("タイヤへ送信完了！");
+	}else{
+		alert("残念だ！\nもう送信できない！\n最新のQRコードが必要なんですよ。\nもう一回来てください。");
+	}
 }
 const draw = ()=> {
 	TWEEN.update();
